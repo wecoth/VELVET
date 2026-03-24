@@ -317,6 +317,7 @@ section { padding: 90px 5%; }
   cursor: pointer; transition: all .2s;
   font-family: 'Nunito', sans-serif;
   text-align: center;
+  margin-top: auto;
 }
 .card-btn:hover { background: var(--brown); }
 
@@ -339,6 +340,21 @@ section { padding: 90px 5%; }
   background: rgba(196,133,90,0.15); color: var(--caramel);
   border-radius: 50px; padding: 5px 14px;
   font-size: .75rem; font-weight: 700; letter-spacing: 1px;
+}
+
+  .cat-divider {
+  grid-column: 1 / -1;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--choco);
+  padding: 32px 0 12px;
+  border-bottom: 1px solid var(--beige-dark);
+  margin-bottom: 4px;
+  display: none;
+}
+.cat-divider.visible {
+  display: block;
 }
 
 /* ─── CAKE LAYERS ─── */
@@ -696,6 +712,8 @@ footer {
   <div class="products-grid" id="products-grid">
 
     <!-- БЕНТО -->
+    <div class="cat-divider" data-for="бенто">Бенто-торты</div>
+    <div class="product-card reveal" data-cat="бенто" ...>
     <div class="product-card reveal" data-cat="бенто" style="--c:#F9DDD0">
       <div class="card-img" style="background:linear-gradient(135deg,#FDDEDE,#F7C8B8)"><div class="card-emoji">🎂</div></div>
       <div class="card-body">
@@ -799,6 +817,7 @@ footer {
     </div>
 
     <!-- ТОРТЫ -->
+    <div class="cat-divider" data-for="торты">Торты</div>
     <div class="product-card reveal" data-cat="торты">
       <div class="card-img" style="background:linear-gradient(135deg,#FDDEDE,#F0C0C0)"><div class="card-emoji">🎂</div></div>
       <div class="card-body">
@@ -951,6 +970,7 @@ footer {
     </div>
 
     <!-- ТРАЙФЛЫ -->
+    <div class="cat-divider" data-for="трайфлы">Трайфлы</div>
     <div class="product-card reveal" data-cat="трайфлы">
       <div class="card-img" style="background:linear-gradient(135deg,#FDDEDE,#F0C4C4)"><div class="card-emoji">🥃</div></div>
       <div class="card-body">
@@ -1017,6 +1037,7 @@ footer {
     </div>
 
     <!-- КАПКЕЙКИ -->
+    <div class="cat-divider" data-for="капкейки">Капкейки</div>
     <div class="product-card reveal" data-cat="капкейки">
       <div class="card-img" style="background:linear-gradient(135deg,#E8D8B8,#D4BE98)"><div class="card-emoji">🧁</div></div>
       <div class="card-body">
@@ -1286,14 +1307,19 @@ document.querySelectorAll('.tab').forEach(tab => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     const filter = tab.dataset.filter;
+
+    // карточки
     document.querySelectorAll('.product-card, .coming-card').forEach(card => {
       if (filter === 'all') {
         card.classList.remove('hidden');
-      } else if (filter === 'скоро') {
-        card.classList.toggle('hidden', card.dataset.cat !== 'soon');
       } else {
         card.classList.toggle('hidden', card.dataset.cat !== filter && card.dataset.cat !== 'soon');
       }
+    });
+
+    // разделители — показываем только при "Все"
+    document.querySelectorAll('.cat-divider').forEach(div => {
+      div.classList.toggle('visible', filter === 'all');
     });
   });
 });
@@ -1418,6 +1444,7 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+document.querySelectorAll('.cat-divider').forEach(div => div.classList.add('visible'));
 </script>
 </body>
 </html>
