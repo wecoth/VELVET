@@ -1090,14 +1090,16 @@ function renderCard(т) {
   const fillingTags = (т.начинки || []).map(n => `<span class="filling-tag">${n}</span>`).join('');
   const цена = т.цена ? `от ${т.цена} ₽` : 'Уточнить';
   const название = (т.название || '').replace(/'/g, "\\'");
+ const photoUrl = t.фото || t.фото_url || t.image || t.image_url || '';
+
  
   return `
   <div class="product-card reveal" data-cat="${slug}">
     <div class="card-inner">
       <div class="card-front">
        <div class="card-img" style="background:${bg}">
-  ${т.фото 
-  ? `<img src="${photoUrl}" alt="${т.название}" class="card-photo">`
+ ${photoUrl
+  ? `<img src="${photoUrl}" alt="${t.название}" class="card-photo">`
   : `<div class="card-emoji">${emoji}</div>`
 }
 </div>
