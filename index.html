@@ -1134,11 +1134,10 @@ function renderCard(т) {
         <div class="card-body">
           <div class="card-name">${т.название || ''}</div>
           <div class="card-desc">${т.описание || ''}</div>
-           <div class="card-fillings">${fillingTags}</div>
+          <div class="card-fillings">${fillingTags}</div>
           <div class="card-meta">
             <div class="card-price">${цена}</div>
           </div>
-<div class="card-fillings">${fillingTags}</div>
           <div class="card-actions">
             <button class="card-detail-btn" onclick="flipCard(this)">Подробнее ›</button>
             <button class="card-btn" onclick="order('${название}')">Заказать</button>
