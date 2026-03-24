@@ -1071,9 +1071,12 @@ function renderCard(т) {
   <div class="product-card reveal" data-cat="${slug}">
     <div class="card-inner">
       <div class="card-front">
-        <div class="card-img" style="background:${bg}">
-          <div class="card-emoji">${emoji}</div>
-        </div>
+       <div class="card-img" style="background:${bg}">
+  ${т.фото 
+    ? `<img src="${т.фото}" alt="${т.название}" style="width:100%;height:100%;object-fit:cover;border-radius:0;">`
+    : `<div class="card-emoji">${emoji}</div>`
+  }
+</div>
         <div class="card-body">
           <div class="card-name">${т.название || ''}</div>
           <div class="card-desc">${т.описание || ''}</div>
