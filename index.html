@@ -318,8 +318,10 @@ section { padding: 90px 5%; }
   align-items: center;
 }
 .card-price {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.1rem; font-weight: 600; color: var(--choco);
+  font-family: 'Cinzel', serif; /* или 'Nunito', sans-serif */
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--choco);
 }
 .card-time {
   font-size: .75rem; color: var(--text-light);
@@ -1106,7 +1108,6 @@ function renderCard(т) {
           <div class="card-desc">${т.описание || ''}</div>
           <div class="card-meta">
             <div class="card-price">${цена}</div>
-            <div class="card-time">${т.срок_изготовления || ''}</div>
           </div>
           <div class="card-fillings">${fillingTags}</div>
           <div style="display:flex;gap:8px;margin-top:auto;padding-top:10px;">
