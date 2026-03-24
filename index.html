@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;600&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
 :root {
   --white: #FFFFFF;
   --pink-0: #FFFFFF;
@@ -26,21 +26,21 @@
   --shadow: 0 8px 40px rgba(62,26,12,0.08);
   --shadow-hover: 0 16px 60px rgba(62,26,12,0.15);
 }
-
+ 
 html { scroll-behavior: smooth; }
-
+ 
 body {
   font-family: 'Nunito', sans-serif;
   background: var(--white);
   color: var(--text);
   overflow-x: hidden;
 }
-
+ 
 /* ─── GRADIENT BG ─── */
 .bg-gradient {
   background: linear-gradient(160deg, #fff 0%, #fff8f8 30%, #ffeaea 60%, #fddede 100%);
 }
-
+ 
 /* ─── NAV ─── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -53,7 +53,7 @@ nav {
   transition: box-shadow .3s;
 }
 nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
-
+ 
 .nav-logo {
   font-family: 'Cinzel', serif;
   font-size: 2rem;
@@ -70,7 +70,7 @@ nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
   transition: color .2s;
 }
 .nav-links a:hover { color: var(--choco); }
-
+ 
 .nav-btn {
   background: var(--choco); color: #fff;
   border: none; border-radius: 50px;
@@ -79,10 +79,10 @@ nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
   text-decoration: none; letter-spacing: .3px;
 }
 .nav-btn:hover { background: var(--brown); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(62,26,12,0.25); }
-
+ 
 .burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
 .burger span { display: block; width: 24px; height: 2px; background: var(--choco); border-radius: 2px; transition: .3s; }
-
+ 
 /* ─── HERO ─── */
 .hero {
   min-height: 100vh;
@@ -106,7 +106,7 @@ nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
   background: radial-gradient(circle, rgba(253,222,222,0.5) 0%, transparent 70%);
   border-radius: 50%; pointer-events: none;
 }
-
+ 
 .hero-left { position: relative; z-index: 1; }
 .hero-tag {
   display: inline-block;
@@ -132,7 +132,7 @@ nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
   line-height: 1.7; max-width: 420px; margin-bottom: 36px;
 }
 .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 48px; }
-
+ 
 .btn-primary {
   background: var(--choco); color: #fff;
   border: none; border-radius: 50px;
@@ -141,7 +141,7 @@ nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
   text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
 }
 .btn-primary:hover { background: var(--brown); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(62,26,12,0.28); }
-
+ 
 .btn-outline {
   background: transparent; color: var(--choco);
   border: 1.5px solid rgba(62,26,12,0.25); border-radius: 50px;
@@ -150,7 +150,7 @@ nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
   text-decoration: none;
 }
 .btn-outline:hover { border-color: var(--choco); background: rgba(62,26,12,0.04); }
-
+ 
 .hero-cats {
   display: flex; gap: 12px; flex-wrap: wrap;
 }
@@ -162,7 +162,7 @@ nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
   cursor: pointer; transition: all .2s; text-decoration: none;
 }
 .hero-cat:hover { background: var(--choco); color: #fff; border-color: var(--choco); }
-
+ 
 .hero-right {
   display: flex; justify-content: center; align-items: center;
   position: relative; z-index: 1;
@@ -205,7 +205,7 @@ nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
 }
 .hero-badge2 .badge-num { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; line-height: 1; }
 .hero-badge2 .badge-txt { font-size: .72rem; opacity: .8; margin-top: 2px; }
-
+ 
 /* ─── SECTION COMMON ─── */
 section { padding: 90px 5%; }
 .section-tag {
@@ -223,7 +223,7 @@ section { padding: 90px 5%; }
   color: var(--text-light); font-size: .95rem;
   line-height: 1.7; max-width: 520px;
 }
-
+ 
 /* ─── CATALOG ─── */
 #catalog { background: var(--pink-1); }
 .catalog-head {
@@ -244,22 +244,24 @@ section { padding: 90px 5%; }
 .tab.active, .tab:hover {
   background: var(--choco); color: #fff; border-color: var(--choco);
 }
-
+ 
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 24px;
 }
-
+ 
 .product-card {
   background: var(--white);
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
   transition: all .3s;
-  cursor: pointer;
+  cursor: default;
   display: flex;
   flex-direction: column;
+  min-height: 440px;
+  perspective: 1000px;
 }
   
 .product-card:hover {
@@ -267,7 +269,7 @@ section { padding: 90px 5%; }
   box-shadow: var(--shadow-hover);
 }
 .product-card.hidden { display: none; }
-
+ 
 .card-img {
   height: 200px;
   display: flex; align-items: center; justify-content: center;
@@ -276,7 +278,7 @@ section { padding: 90px 5%; }
 }
 .card-img .card-emoji { filter: drop-shadow(0 8px 16px rgba(62,26,12,0.15)); transition: transform .3s; }
 .product-card:hover .card-emoji { transform: scale(1.08); }
-
+ 
 .card-body { padding: 20px; display: flex; flex-direction: column; flex: 1; }
 .card-name {
   font-family: 'Cormorant Garamond', serif;
@@ -285,8 +287,7 @@ section { padding: 90px 5%; }
 }
 .card-desc {
   font-size: .82rem; color: var(--text-light);
-  line-height: 1.6; margin-bottom: 14px;
-  .card-spacer { flex: 1; }
+  line-height: 1.6; margin-bottom: 10px;
 }
 .card-meta {
   display: flex; justify-content: space-between;
@@ -321,7 +322,7 @@ section { padding: 90px 5%; }
   margin-top: auto;
 }
 .card-btn:hover { background: var(--brown); }
-
+ 
 /* Coming Soon cards */
 .coming-card {
   background: var(--beige);
@@ -342,8 +343,8 @@ section { padding: 90px 5%; }
   border-radius: 50px; padding: 5px 14px;
   font-size: .75rem; font-weight: 700; letter-spacing: 1px;
 }
-
-  .cat-divider {
+ 
+.cat-divider {
   grid-column: 1 / -1;
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.6rem;
@@ -354,10 +355,71 @@ section { padding: 90px 5%; }
   margin-bottom: 4px;
   display: none;
 }
-.cat-divider.visible {
-  display: block;
+.cat-divider.visible { display: block; }
+ 
+/* ─── FLIP CARD ─── */
+.card-inner {
+  position: relative;
+  width: 100%; height: 100%;
+  transition: transform 0.55s cubic-bezier(.4,0,.2,1);
+  transform-style: preserve-3d;
+  flex: 1; display: flex; flex-direction: column;
 }
-
+.product-card.flipped .card-inner { transform: rotateY(180deg); }
+.card-front, .card-back {
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex; flex-direction: column;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.card-back {
+  transform: rotateY(180deg);
+  background: var(--white);
+  padding: 22px;
+  overflow-y: auto;
+}
+.card-back-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; font-weight: 600;
+  color: var(--choco); margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--beige-dark);
+}
+.card-back-row { margin-bottom: 11px; }
+.card-back-label {
+  font-size: .68rem; font-weight: 700;
+  letter-spacing: .8px; text-transform: uppercase;
+  color: var(--text-light); margin-bottom: 3px;
+}
+.card-back-value {
+  font-size: .82rem; color: var(--text); line-height: 1.5;
+}
+.card-back-btns {
+  display: flex; gap: 8px; margin-top: auto; padding-top: 14px;
+}
+.card-back-btns .card-btn { flex: 1; margin-top: 0; }
+.card-flip-back {
+  flex: 1; background: transparent;
+  border: 1.5px solid rgba(62,26,12,0.2);
+  border-radius: 50px; color: var(--choco);
+  font-size: .82rem; font-weight: 600;
+  cursor: pointer; font-family: 'Nunito', sans-serif;
+  padding: 10px; transition: all .2s;
+}
+.card-flip-back:hover { background: var(--beige); border-color: var(--choco); }
+.card-detail-btn {
+  display: block; width: 100%;
+  background: transparent; color: var(--choco);
+  border: 1.5px solid rgba(62,26,12,0.2); border-radius: 50px;
+  padding: 10px; margin-top: 8px;
+  font-size: .82rem; font-weight: 600;
+  cursor: pointer; transition: all .2s;
+  font-family: 'Nunito', sans-serif; text-align: center;
+}
+.card-detail-btn:hover { background: var(--beige); border-color: var(--choco); }
+ 
 /* ─── CAKE LAYERS ─── */
 #layers-section {
   background: linear-gradient(135deg, #fff 0%, #fff0f0 100%);
@@ -371,7 +433,7 @@ section { padding: 90px 5%; }
 .layers-left { max-width: 380px; text-align: left; }
 .layers-left .section-title { text-align: left; }
 .layers-left .section-desc { text-align: left; }
-
+ 
 .layers-pick { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
 .layer-pick-btn {
   padding: 8px 20px; border-radius: 50px;
@@ -383,14 +445,14 @@ section { padding: 90px 5%; }
 .layer-pick-btn.active {
   background: var(--choco); color: #fff; border-color: var(--choco);
 }
-
+ 
 .layers-visual {
   position: relative;
   width: 320px; height: 480px;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
 }
-
+ 
 .cake-layer {
   position: absolute;
   width: 220px; height: 44px;
@@ -414,7 +476,7 @@ section { padding: 90px 5%; }
   pointer-events: none; font-weight: 600;
 }
 .layers-visual.exploded .cake-layer::after { opacity: 1; transform: translateX(0); }
-
+ 
 .layer-biscuit { background: linear-gradient(90deg, #5C3317, #7B4A28); }
 .layer-cream { background: linear-gradient(90deg, #E8D0B8, #D4B896); color: var(--choco); }
 .layer-caramel { background: linear-gradient(90deg, #C4855A, #D4955A); }
@@ -424,7 +486,7 @@ section { padding: 90px 5%; }
 .layer-coffee { background: linear-gradient(90deg, #4A3020, #6B4530); }
 .layer-lemon { background: linear-gradient(90deg, #C4B048, #D4C058); color: var(--choco); }
 .layer-mousse { background: linear-gradient(90deg, #C8A0B8, #D8B0C8); color: var(--choco); }
-
+ 
 .explode-btn {
   margin-top: 28px;
   background: transparent; border: 1.5px solid var(--choco);
@@ -433,7 +495,7 @@ section { padding: 90px 5%; }
   cursor: pointer; transition: all .25s; font-family: 'Nunito', sans-serif;
 }
 .explode-btn:hover { background: var(--choco); color: #fff; }
-
+ 
 /* ─── ABOUT ─── */
 #about {
   background: var(--choco);
@@ -468,7 +530,7 @@ section { padding: 90px 5%; }
   font-size: 2.2rem; font-weight: 600; color: var(--caramel); line-height: 1;
 }
 .stat-label { font-size: .78rem; color: rgba(255,255,255,0.6); margin-top: 4px; }
-
+ 
 /* ─── WHY ─── */
 #why { background: var(--pink-1); }
 .why-grid {
@@ -488,7 +550,7 @@ section { padding: 90px 5%; }
   margin-bottom: 8px;
 }
 .why-text { font-size: .85rem; color: var(--text-light); line-height: 1.7; }
-
+ 
 /* ─── FAQ ─── */
 #faq { background: var(--white); }
 .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 48px; }
@@ -516,7 +578,7 @@ section { padding: 90px 5%; }
   padding: 0 24px;
 }
 .faq-item.open .faq-a { max-height: 200px; padding: 0 24px 20px; }
-
+ 
 /* ─── DELIVERY ─── */
 #delivery { background: var(--beige); }
 .delivery-grid {
@@ -537,7 +599,7 @@ section { padding: 90px 5%; }
 .delivery-detail {
   margin-top: 14px; font-size: .85rem; font-weight: 600; color: var(--brown);
 }
-
+ 
 /* ─── CONTACT ─── */
 #contact {
   background: linear-gradient(135deg, var(--choco) 0%, #5C2E18 100%);
@@ -561,7 +623,7 @@ section { padding: 90px 5%; }
   margin-top: 40px; font-size: .88rem;
   color: rgba(255,255,255,0.5); letter-spacing: .5px;
 }
-
+ 
 /* ─── FOOTER ─── */
 footer {
   background: #2A1008;
@@ -577,14 +639,14 @@ footer {
 .footer-links { display: flex; gap: 20px; }
 .footer-links a { font-size: .8rem; color: rgba(255,255,255,0.45); text-decoration: none; transition: color .2s; }
 .footer-links a:hover { color: var(--caramel); }
-
+ 
 /* ─── SCROLL REVEAL ─── */
 .reveal {
   opacity: 0; transform: translateY(30px);
   transition: opacity .7s ease, transform .7s ease;
 }
 .reveal.visible { opacity: 1; transform: none; }
-
+ 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; text-align: center; padding-top: 120px; }
@@ -606,7 +668,7 @@ footer {
   .hero-img-wrap { width: 300px; height: 300px; }
   .about-stats { gap: 20px; }
 }
-
+ 
 /* ─── MOBILE NAV OPEN ─── */
 .mobile-nav {
   display: none;
@@ -632,7 +694,7 @@ footer {
 </style>
 </head>
 <body>
-
+ 
 <!-- NAV -->
 <nav id="main-nav">
   <a href="#" class="nav-logo">Velvet</a>
@@ -648,7 +710,7 @@ footer {
     <span></span><span></span><span></span>
   </div>
 </nav>
-
+ 
 <!-- MOBILE NAV -->
 <div class="mobile-nav" id="mobile-nav">
   <button class="mobile-close" onclick="closeMenu()">✕</button>
@@ -658,7 +720,7 @@ footer {
   <a href="#delivery" onclick="closeMenu()">Доставка</a>
   <a href="#contact" onclick="closeMenu()">Заказать</a>
 </div>
-
+ 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-left reveal">
@@ -693,7 +755,7 @@ footer {
     </div>
   </div>
 </section>
-
+ 
 <!-- CATALOG -->
 <section id="catalog">
   <div class="catalog-head reveal">
@@ -709,405 +771,15 @@ footer {
       <button class="tab" data-filter="капкейки">Капкейки</button>
     </div>
   </div>
-
+ 
   <div class="products-grid" id="products-grid">
-
-    <!-- БЕНТО -->
-    <div class="cat-divider" data-for="бенто">Бенто-торты</div>
-    <div class="product-card reveal" data-cat="бенто" style="--c:#F9DDD0">
-      <div class="card-img" style="background:linear-gradient(135deg,#FDDEDE,#F7C8B8)"><div class="card-emoji">🎂</div></div>
-      <div class="card-body">
-        <div class="card-name">Красный бархат</div>
-        <div class="card-desc">Бархатный шоколадный бисквит с нежным кремом из творожного сыра, ягодами и белым шоколадом</div>
-        <div class="card-meta">
-          <div class="card-price">от 1 500 ₽</div>
-          <div class="card-time">2–3 дня</div>
-        </div>
-        <div class="card-spacer"></div><div class="card-fillings">
-          <span class="filling-tag">🍓 Клубника</span>
-          <span class="filling-tag">🫐 Малина</span>
-          <span class="filling-tag">🍒 Вишня</span>
-        </div>
-        <button class="card-btn" onclick="order('Красный бархат (Бенто)')">Заказать</button>
-      </div>
+    <div id="catalog-loading" style="grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--text-light);font-size:.95rem;">
+      Загружаем меню...
     </div>
-
-    <div class="product-card reveal" data-cat="бенто">
-      <div class="card-img" style="background:linear-gradient(135deg,#E8D8C0,#D4BEA0)"><div class="card-emoji">🍫</div></div>
-      <div class="card-body">
-        <div class="card-name">Сникерс</div>
-        <div class="card-desc">Шоколадный бисквит со сливочным кремом, солёной карамелью и хрустящим арахисом</div>
-        <div class="card-meta">
-          <div class="card-price">от 1 500 ₽</div>
-          <div class="card-time">2–3 дня</div>
-        </div>
-        <div class="card-spacer"></div><div class="card-fillings">
-          <span class="filling-tag">🥜 Соленая карамель</span>
-        </div>
-        <button class="card-btn" onclick="order('Сникерс (Бенто)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="бенто">
-      <div class="card-img" style="background:linear-gradient(135deg,#D8C8B0,#C8A888)"><div class="card-emoji">☕</div></div>
-      <div class="card-body">
-        <div class="card-name">Тирамису</div>
-        <div class="card-desc">Нежный бисквит с кофейным муссом, сливочным кремом и молочным шоколадом</div>
-        <div class="card-meta">
-          <div class="card-price">от 1 500 ₽</div>
-          <div class="card-time">2–3 дня</div>
-        </div>
-        <div class="card-fillings">
-          <span class="filling-tag">☕ Кофейный мусс</span>
-        </div>
-        <button class="card-btn" onclick="order('Тирамису (Бенто)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="бенто">
-      <div class="card-img" style="background:linear-gradient(135deg,#E0C8D0,#C8A8B8)"><div class="card-emoji">🍓</div></div>
-      <div class="card-body">
-        <div class="card-name">Шоколад — ягода</div>
-        <div class="card-desc">Насыщенный шоколадный бисквит с сочными ягодами и лёгким сливочным кремом</div>
-        <div class="card-meta">
-          <div class="card-price">от 1 500 ₽</div>
-          <div class="card-time">2–3 дня</div>
-        </div>
-        <div class="card-fillings">
-          <span class="filling-tag">🍓 Клубника</span>
-          <span class="filling-tag">🍒 Вишня</span>
-          <span class="filling-tag">🫐 Малина</span>
-        </div>
-        <button class="card-btn" onclick="order('Шоколад-ягода (Бенто)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="бенто">
-      <div class="card-img" style="background:linear-gradient(135deg,#F8ECD8,#EED8C0)"><div class="card-emoji">🍰</div></div>
-      <div class="card-body">
-        <div class="card-name">Ваниль — ягода</div>
-        <div class="card-desc">Воздушный ванильный бисквит с нежным кремом из творожного сыра и свежими ягодами</div>
-        <div class="card-meta">
-          <div class="card-price">от 1 500 ₽</div>
-          <div class="card-time">2–3 дня</div>
-        </div>
-        <div class="card-fillings">
-          <span class="filling-tag">🍓 Клубника</span>
-          <span class="filling-tag">🫐 Малина</span>
-          <span class="filling-tag">🍒 Вишня</span>
-        </div>
-        <button class="card-btn" onclick="order('Ваниль-ягода (Бенто)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="бенто">
-      <div class="card-img" style="background:linear-gradient(135deg,#D8D0E8,#C0B0D8)"><div class="card-emoji">💜</div></div>
-      <div class="card-body">
-        <div class="card-name">Лаванда — черника</div>
-        <div class="card-desc">Ароматный бисквит с лавандой, черникой и белым шоколадом</div>
-        <div class="card-meta">
-          <div class="card-price">от 1 500 ₽</div>
-          <div class="card-time">2–3 дня</div>
-        </div>
-        <div class="card-fillings">
-          <span class="filling-tag">🫐 Черника</span>
-        </div>
-        <button class="card-btn" onclick="order('Лаванда-черника (Бенто)')">Заказать</button>
-      </div>
-    </div>
-
-    <!-- ТОРТЫ -->
-    <div class="cat-divider" data-for="торты">Торты</div>
-    <div class="product-card reveal" data-cat="торты">
-      <div class="card-img" style="background:linear-gradient(135deg,#FDDEDE,#F0C0C0)"><div class="card-emoji">🎂</div></div>
-      <div class="card-body">
-        <div class="card-name">Красный бархат</div>
-        <div class="card-desc">Классика в новом прочтении: яркий бисквит, нежный сырный крем, ягоды по выбору</div>
-        <div class="card-meta">
-          <div class="card-price">от 2 300 ₽</div>
-          <div class="card-time">3 дня</div>
-        </div>
-        <div class="card-fillings">
-          <span class="filling-tag">🍓 Клубника</span>
-          <span class="filling-tag">🫐 Малина</span>
-          <span class="filling-tag">🍒 Вишня</span>
-        </div>
-        <button class="card-btn" onclick="order('Красный бархат (Торт)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="торты">
-      <div class="card-img" style="background:linear-gradient(135deg,#E8D8B8,#D4BE98)"><div class="card-emoji">🍫</div></div>
-      <div class="card-body">
-        <div class="card-name">Сникерс</div>
-        <div class="card-desc">Шоколадный торт с арахисом, домашней солёной карамелью и сырным кремом</div>
-        <div class="card-meta">
-          <div class="card-price">от 2 300 ₽</div>
-          <div class="card-time">3 дня</div>
-        </div>
-        <div class="card-fillings">
-          <span class="filling-tag">🥜 Соленая карамель с арахисом</span>
-        </div>
-        <button class="card-btn" onclick="order('Сникерс (Торт)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="торты">
-      <div class="card-img" style="background:linear-gradient(135deg,#D8C8A8,#C4A880)"><div class="card-emoji">☕</div></div>
-      <div class="card-body">
-        <div class="card-name">Тирамису</div>
-        <div class="card-desc">Итальянский десерт в формате торта: кофейный бисквит, маскарпоне, шоколад</div>
-        <div class="card-meta">
-          <div class="card-price">от 2 300 ₽</div>
-          <div class="card-time">3 дня</div>
-        </div>
-        <div class="card-fillings">
-          <span class="filling-tag">☕ Кофейный мусс</span>
-        </div>
-        <button class="card-btn" onclick="order('Тирамису (Торт)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="торты">
-      <div class="card-img" style="background:linear-gradient(135deg,#F0D8E0,#D8B8C8)"><div class="card-emoji">🥥</div></div>
-      <div class="card-body">
-        <div class="card-name">Малина — кокос</div>
-        <div class="card-desc">Лёгкий торт с малиновым вкусом, кокосовой стружкой и белым шоколадом</div>
-        <div class="card-meta">
-          <div class="card-price">от 2 300 ₽</div>
-          <div class="card-time">3 дня</div>
-        </div>
-        <div class="card-fillings">
-          <span class="filling-tag">🫐 Малиновый курд</span>
-          <span class="filling-tag">🥥 Кокосовый ганаш</span>
-        </div>
-        <button class="card-btn" onclick="order('Малина-кокос (Торт)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="торты">
-      <div class="card-img" style="background:linear-gradient(135deg,#F8E8D0,#ECD0B0)"><div class="card-emoji">🍋</div></div>
-      <div class="card-body">
-        <div class="card-name">Клубника — лимон</div>
-        <div class="card-desc">Свежий и яркий: клубника, лимонный курд, воздушный сырный крем</div>
-        <div class="card-meta">
-          <div class="card-price">от 2 300 ₽</div>
-          <div class="card-time">3 дня</div>
-        </div>
-        <div class="card-fillings">
-          <span class="filling-tag">🍓 Клубничный конфи</span>
-          <span class="filling-tag">🍋 Лимонный курд</span>
-        </div>
-        <button class="card-btn" onclick="order('Клубника-лимон (Торт)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="торты">
-      <div class="card-img" style="background:linear-gradient(135deg,#D8D0E8,#BCB0D4)"><div class="card-emoji">🫐</div></div>
-      <div class="card-body">
-        <div class="card-name">Черника — лимон</div>
-        <div class="card-desc">Нежный торт с черникой, лимонной кислинкой и белым шоколадом</div>
-        <div class="card-meta">
-          <div class="card-price">от 2 300 ₽</div>
-          <div class="card-time">3 дня</div>
-        </div>
-        <div class="card-fillings">
-          <span class="filling-tag">🫐 Черничное кремю</span>
-          <span class="filling-tag">🍋 Лимонный курд</span>
-        </div>
-        <button class="card-btn" onclick="order('Черника-лимон (Торт)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="торты">
-      <div class="card-img" style="background:linear-gradient(135deg,#F0E0D0,#DCC8B0)"><div class="card-emoji">🍰</div></div>
-      <div class="card-body">
-        <div class="card-name">Ваниль — малина — шоколад</div>
-        <div class="card-desc">Сочетание ванильного бисквита, малины и двух видов шоколада</div>
-        <div class="card-meta">
-          <div class="card-price">от 2 300 ₽</div>
-          <div class="card-time">3 дня</div>
-        </div>
-        <div class="card-fillings">
-          <span class="filling-tag">🫐 Малиновое кремю</span>
-          <span class="filling-tag">🍫 Шоколадный ганаш</span>
-        </div>
-        <button class="card-btn" onclick="order('Ваниль-малина-шоколад (Торт)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="торты">
-      <div class="card-img" style="background:linear-gradient(135deg,#F8E8F0,#E8D0E0)"><div class="card-emoji">🍌</div></div>
-      <div class="card-body">
-        <div class="card-name">Клубника — банан</div>
-        <div class="card-desc">Мягкий торт с клубникой, бананом и сливочным муссом</div>
-        <div class="card-meta">
-          <div class="card-price">от 2 300 ₽</div>
-          <div class="card-time">3 дня</div>
-        </div>
-        <div class="card-fillings">
-          <span class="filling-tag">🍓 Клубничный мусс</span>
-          <span class="filling-tag">🍌 Банановый мусс</span>
-        </div>
-        <button class="card-btn" onclick="order('Клубника-банан (Торт)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="торты">
-      <div class="card-img" style="background:linear-gradient(135deg,#D0C0D8,#B8A0C8)"><div class="card-emoji">🍒</div></div>
-      <div class="card-body">
-        <div class="card-name">Чёрный лес</div>
-        <div class="card-desc">Шоколадный бисквит, вишня, маскарпоне и взбитые сливки</div>
-        <div class="card-meta">
-          <div class="card-price">от 2 300 ₽</div>
-          <div class="card-time">3 дня</div>
-        </div>
-        <div class="card-fillings">
-          <span class="filling-tag">🍒 Вишнёвый крем</span>
-        </div>
-        <button class="card-btn" onclick="order('Чёрный лес (Торт)')">Заказать</button>
-      </div>
-    </div>
-
-    <!-- ТРАЙФЛЫ -->
-    <div class="cat-divider" data-for="трайфлы">Трайфлы</div>
-    <div class="product-card reveal" data-cat="трайфлы">
-      <div class="card-img" style="background:linear-gradient(135deg,#FDDEDE,#F0C4C4)"><div class="card-emoji">🥃</div></div>
-      <div class="card-body">
-        <div class="card-name">Красный бархат</div>
-        <div class="card-desc">Все слои любимого торта в порционном стаканчике</div>
-        <div class="card-meta">
-          <div class="card-price">Уточнить</div>
-          <div class="card-time">1–3 дня</div>
-        </div>
-        <button class="card-btn" onclick="order('Красный бархат (Трайфл)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="трайфлы">
-      <div class="card-img" style="background:linear-gradient(135deg,#E8D8B8,#D4BE98)"><div class="card-emoji">🥃</div></div>
-      <div class="card-body">
-        <div class="card-name">Сникерс</div>
-        <div class="card-desc">Шоколад, карамель и арахис в удобном формате</div>
-        <div class="card-meta">
-          <div class="card-price">Уточнить</div>
-          <div class="card-time">1–3 дня</div>
-        </div>
-        <button class="card-btn" onclick="order('Сникерс (Трайфл)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="трайфлы">
-      <div class="card-img" style="background:linear-gradient(135deg,#E0C8D0,#C8A8B8)"><div class="card-emoji">🥃</div></div>
-      <div class="card-body">
-        <div class="card-name">Шоколад — ягода</div>
-        <div class="card-desc">Шоколадный бисквит, сливочный крем и ягоды слой за слоем</div>
-        <div class="card-meta">
-          <div class="card-price">Уточнить</div>
-          <div class="card-time">1–3 дня</div>
-        </div>
-        <button class="card-btn" onclick="order('Шоколад-ягода (Трайфл)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="трайфлы">
-      <div class="card-img" style="background:linear-gradient(135deg,#F8ECD8,#EED8C0)"><div class="card-emoji">🥃</div></div>
-      <div class="card-body">
-        <div class="card-name">Ваниль — ягода</div>
-        <div class="card-desc">Лёгкий ванильный десерт с ягодами в стаканчике</div>
-        <div class="card-meta">
-          <div class="card-price">Уточнить</div>
-          <div class="card-time">1–3 дня</div>
-        </div>
-        <button class="card-btn" onclick="order('Ваниль-ягода (Трайфл)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="трайфлы">
-      <div class="card-img" style="background:linear-gradient(135deg,#D8D0E8,#C0B0D8)"><div class="card-emoji">🥃</div></div>
-      <div class="card-body">
-        <div class="card-name">Лаванда — черника</div>
-        <div class="card-desc">Ароматный трайфл с лавандой и черникой</div>
-        <div class="card-meta">
-          <div class="card-price">Уточнить</div>
-          <div class="card-time">1–3 дня</div>
-        </div>
-        <button class="card-btn" onclick="order('Лаванда-черника (Трайфл)')">Заказать</button>
-      </div>
-    </div>
-
-    <!-- КАПКЕЙКИ -->
-    <div class="cat-divider" data-for="капкейки">Капкейки</div>
-    <div class="product-card reveal" data-cat="капкейки">
-      <div class="card-img" style="background:linear-gradient(135deg,#E8D8B8,#D4BE98)"><div class="card-emoji">🧁</div></div>
-      <div class="card-body">
-        <div class="card-name">Сникерс</div>
-        <div class="card-desc">Шоколадный капкейк с арахисом и карамельным кремом</div>
-        <div class="card-meta">
-          <div class="card-price">Уточнить</div>
-          <div class="card-time">1–3 дня</div>
-        </div>
-        <button class="card-btn" onclick="order('Сникерс (Капкейк)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="капкейки">
-      <div class="card-img" style="background:linear-gradient(135deg,#D8C8A8,#C4A880)"><div class="card-emoji">🧁</div></div>
-      <div class="card-body">
-        <div class="card-name">Шоколад — банан</div>
-        <div class="card-desc">Насыщенный шоколадный вкус с бананом</div>
-        <div class="card-meta">
-          <div class="card-price">Уточнить</div>
-          <div class="card-time">1–3 дня</div>
-        </div>
-        <button class="card-btn" onclick="order('Шоколад-банан (Капкейк)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="капкейки">
-      <div class="card-img" style="background:linear-gradient(135deg,#F0D8E0,#D8B8C8)"><div class="card-emoji">🧁</div></div>
-      <div class="card-body">
-        <div class="card-name">Шоколад — ягода</div>
-        <div class="card-desc">Шоколадный капкейк с ягодным кремом</div>
-        <div class="card-meta">
-          <div class="card-price">Уточнить</div>
-          <div class="card-time">1–3 дня</div>
-        </div>
-        <button class="card-btn" onclick="order('Шоколад-ягода (Капкейк)')">Заказать</button>
-      </div>
-    </div>
-
-    <div class="product-card reveal" data-cat="капкейки">
-      <div class="card-img" style="background:linear-gradient(135deg,#F8ECD8,#EED8C0)"><div class="card-emoji">🧁</div></div>
-      <div class="card-body">
-        <div class="card-name">Ваниль — ягода</div>
-        <div class="card-desc">Нежный ванильный капкейк с лёгким ягодным кремом</div>
-        <div class="card-meta">
-          <div class="card-price">Уточнить</div>
-          <div class="card-time">1–3 дня</div>
-        </div>
-        <button class="card-btn" onclick="order('Ваниль-ягода (Капкейк)')">Заказать</button>
-      </div>
-    </div>
-
-    <!-- СКОРО В МЕНЮ -->
-    <div class="coming-card reveal" data-cat="soon">
-      <div class="coming-icon">🍮</div>
-      <div class="coming-name">Муссовые пирожные</div>
-      <p style="font-size:.82rem;color:var(--text-light);margin:8px 0 12px">Порционные пирожные с муссовой текстурой</p>
-      <div class="coming-label">Скоро в меню</div>
-    </div>
-
-    <div class="coming-card reveal" data-cat="soon">
-      <div class="coming-icon">🫧</div>
-      <div class="coming-name">Муссовые бенто</div>
-      <p style="font-size:.82rem;color:var(--text-light);margin:8px 0 12px">Лёгкие современные торты с муссовой текстурой</p>
-      <div class="coming-label">Скоро в меню</div>
-    </div>
-
+  </div>
   </div>
 </section>
-
+ 
 <!-- CAKE LAYERS -->
 <section id="layers-section">
   <div class="layers-container">
@@ -1129,7 +801,7 @@ footer {
     </div>
   </div>
 </section>
-
+ 
 <!-- ABOUT -->
 <section id="about">
   <div class="about-img-wrap reveal">
@@ -1156,7 +828,7 @@ footer {
     </div>
   </div>
 </section>
-
+ 
 <!-- WHY -->
 <section id="why">
   <div style="text-align:center" class="reveal">
@@ -1186,7 +858,7 @@ footer {
     </div>
   </div>
 </section>
-
+ 
 <!-- FAQ -->
 <section id="faq">
   <div class="reveal" style="text-align:center;margin-bottom:0">
@@ -1238,7 +910,7 @@ footer {
     </div>
   </div>
 </section>
-
+ 
 <!-- DELIVERY -->
 <section id="delivery">
   <div class="reveal">
@@ -1261,7 +933,7 @@ footer {
     </div>
   </div>
 </section>
-
+ 
 <!-- CONTACT -->
 <section id="contact">
   <div class="reveal">
@@ -1279,7 +951,7 @@ footer {
     <div class="contact-city">📍 Краснодар · Авторская кондитерская Velvet</div>
   </div>
 </section>
-
+ 
 <!-- FOOTER -->
 <footer>
   <a href="#" class="footer-logo">Velvet</a>
@@ -1290,65 +962,181 @@ footer {
     <a href="#contact">Контакты</a>
   </div>
 </footer>
-
+ 
 <script>
 // ─── NAV SCROLL ───
 window.addEventListener('scroll', () => {
   document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 40);
 });
-
+ 
 // ─── MOBILE MENU ───
 function openMenu() { document.getElementById('mobile-nav').classList.add('open'); }
 function closeMenu() { document.getElementById('mobile-nav').classList.remove('open'); }
-
-// ─── CATALOG TABS ───
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    const filter = tab.dataset.filter;
-
-    // карточки
-    document.querySelectorAll('.product-card, .coming-card').forEach(card => {
-      if (filter === 'all') {
-        card.classList.remove('hidden');
-      } else {
-        card.classList.toggle('hidden', card.dataset.cat !== filter && card.dataset.cat !== 'soon');
-      }
-    });
-
-    // разделители — показываем только при "Все"
-    document.querySelectorAll('.cat-divider').forEach(div => {
-      div.classList.toggle('visible', filter === 'all');
-    });
-  });
-});
-
-// Hero cat links
-document.querySelectorAll('.hero-cat').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    const cat = link.dataset.cat;
-    document.querySelector(`#catalog`).scrollIntoView({behavior:'smooth'});
-    setTimeout(() => {
-      const tab = document.querySelector(`.tab[data-filter="${cat}"]`);
-      if (tab) tab.click();
-    }, 600);
-  });
-});
-
+ 
+// ─── FAQ ───
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
+}
+ 
+// ─── FLIP CARD ───
+function flipCard(btn) {
+  btn.closest('.product-card').classList.toggle('flipped');
+}
+ 
 // ─── ORDER ───
 function order(product) {
   const msg = encodeURIComponent(`Здравствуйте! Хочу заказать: ${product}`);
   window.open(`https://t.me/velvet_cakes?text=${msg}`, '_blank');
 }
-
-// ─── FAQ ───
-function toggleFaq(el) {
-  const item = el.parentElement;
-  item.classList.toggle('open');
+ 
+// ─── CATALOG TABS ───
+function initTabs() {
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const filter = tab.dataset.filter;
+      document.querySelectorAll('.product-card, .coming-card').forEach(card => {
+        if (filter === 'all') card.classList.remove('hidden');
+        else card.classList.toggle('hidden', card.dataset.cat !== filter);
+      });
+      document.querySelectorAll('.cat-divider').forEach(div => {
+        div.classList.toggle('visible', filter === 'all');
+      });
+    });
+  });
 }
-
+ 
+// Hero cat links
+document.querySelectorAll('.hero-cat').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector('#catalog').scrollIntoView({behavior:'smooth'});
+    setTimeout(() => {
+      const tab = document.querySelector(`.tab[data-filter="${link.dataset.cat}"]`);
+      if (tab) tab.click();
+    }, 600);
+  });
+});
+ 
+// ─── SCROLL REVEAL ───
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 60);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+ 
+function observeReveal() {
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+ 
+// ─── N8N MENU LOADER ───
+const N8N_URL = 'https://assistcloudai.xyz/webhook/velvet';
+ 
+const EMOJI = {
+  'кат_001': '🎂', 'кат_002': '🍰',
+  'кат_003': '🥃', 'кат_004': '🍮',
+  'кат_005': '🫧', 'кат_006': '🧁',
+};
+const BG = {
+  'кат_001': 'linear-gradient(135deg,#FDDEDE,#F7C8B8)',
+  'кат_002': 'linear-gradient(135deg,#F0E0D0,#DCC8B0)',
+  'кат_003': 'linear-gradient(135deg,#E8D8C0,#D4BEA0)',
+  'кат_004': 'linear-gradient(135deg,#D8D0E8,#C0B0D8)',
+  'кат_005': 'linear-gradient(135deg,#D8E8D0,#C0D4B0)',
+  'кат_006': 'linear-gradient(135deg,#F8ECD8,#EED8C0)',
+};
+const CAT_SLUG = {
+  'кат_001':'бенто','кат_002':'торты',
+  'кат_003':'трайфлы','кат_006':'капкейки',
+};
+const CAT_ORDER = ['кат_001','кат_002','кат_003','кат_006'];
+const CAT_NAMES = {
+  'кат_001':'Бенто-торты','кат_002':'Торты',
+  'кат_003':'Трайфлы','кат_006':'Капкейки',
+};
+ 
+function renderCard(т) {
+  const slug = CAT_SLUG[т.id_категории] || 'other';
+  const emoji = EMOJI[т.id_категории] || '🍰';
+  const bg = BG[т.id_категории] || BG['кат_002'];
+  const fillingTags = (т.начинки || []).map(n => `<span class="filling-tag">${n}</span>`).join('');
+  const цена = т.цена ? `от ${т.цена} ₽` : 'Уточнить';
+  const название = (т.название || '').replace(/'/g, "\\'");
+ 
+  return `
+  <div class="product-card reveal" data-cat="${slug}">
+    <div class="card-inner">
+      <div class="card-front">
+        <div class="card-img" style="background:${bg}">
+          <div class="card-emoji">${emoji}</div>
+        </div>
+        <div class="card-body">
+          <div class="card-name">${т.название || ''}</div>
+          <div class="card-desc">${т.описание || ''}</div>
+          <div class="card-meta">
+            <div class="card-price">${цена}</div>
+            <div class="card-time">${т.срок_изготовления || ''}</div>
+          </div>
+          <div class="card-fillings">${fillingTags}</div>
+          <div style="display:flex;gap:8px;margin-top:auto;padding-top:10px;">
+            <button class="card-detail-btn" style="flex:1" onclick="flipCard(this)">Подробнее ›</button>
+            <button class="card-btn" style="flex:1;margin-top:0" onclick="order('${название}')">Заказать</button>
+          </div>
+        </div>
+      </div>
+      <div class="card-back">
+        <div class="card-back-title">${т.название || ''}</div>
+        ${т.состав ? `<div class="card-back-row"><div class="card-back-label">Состав</div><div class="card-back-value">${т.состав}</div></div>` : ''}
+        ${т.аллергены ? `<div class="card-back-row"><div class="card-back-label">Аллергены</div><div class="card-back-value">${т.аллергены}</div></div>` : ''}
+        ${т.кастомизация ? `<div class="card-back-row"><div class="card-back-label">Можно изменить</div><div class="card-back-value">${т.кастомизация}</div></div>` : ''}
+        ${т.хранение ? `<div class="card-back-row"><div class="card-back-label">Срок хранения</div><div class="card-back-value">${т.хранение}</div></div>` : ''}
+        ${т.срок_изготовления ? `<div class="card-back-row"><div class="card-back-label">Срок изготовления</div><div class="card-back-value">${т.срок_изготовления}</div></div>` : ''}
+        ${т.минимальный_заказ ? `<div class="card-back-row"><div class="card-back-label">Минимальный заказ</div><div class="card-back-value">${т.минимальный_заказ}</div></div>` : ''}
+        <div class="card-back-btns">
+          <button class="card-flip-back" onclick="flipCard(this)">← Назад</button>
+          <button class="card-btn" onclick="order('${название}')">Заказать</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+ 
+async function loadMenu() {
+  const grid = document.getElementById('products-grid');
+  try {
+    const res = await fetch(N8N_URL);
+    if (!res.ok) throw new Error('Network error');
+    const data = await res.json();
+    const товары = data.товары || [];
+ 
+    let html = '';
+    CAT_ORDER.forEach(catId => {
+      const items = товары.filter(t => t.id_категории === catId);
+      if (!items.length) return;
+      html += `<div class="cat-divider visible" data-for="${CAT_SLUG[catId]}">${CAT_NAMES[catId]}</div>`;
+      items.forEach(t => { html += renderCard(t); });
+    });
+ 
+    if (!html) throw new Error('No items');
+    grid.innerHTML = html;
+    initTabs();
+    observeReveal();
+ 
+  } catch(e) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-light)">
+      Не удалось загрузить меню. Попробуйте обновить страницу.
+    </div>`;
+    console.error('Menu load error:', e);
+  }
+}
+ 
+loadMenu();
+ 
 // ─── CAKE LAYERS ───
 const cakes = {
   snikers: [
@@ -1381,10 +1169,10 @@ const cakes = {
     { name: 'Молочный шоколад', cls: 'layer-choco' },
   ]
 };
-
+ 
 let currentCake = 'snikers';
 let exploded = false;
-
+ 
 function buildLayers(cakeName) {
   const layers = cakes[cakeName];
   const visual = document.getElementById('layers-visual');
@@ -1392,11 +1180,9 @@ function buildLayers(cakeName) {
   visual.classList.remove('exploded');
   exploded = false;
   document.getElementById('explode-btn').textContent = '✦ Разобрать на слои';
-
   const total = layers.length;
   const centerY = 240;
   const stackSpacing = 12;
-
   layers.forEach((l, i) => {
     const div = document.createElement('div');
     div.className = `cake-layer ${l.cls}`;
@@ -1408,20 +1194,19 @@ function buildLayers(cakeName) {
     visual.appendChild(div);
   });
 }
-
+ 
 function toggleExplode() {
   const visual = document.getElementById('layers-visual');
   const layers = visual.querySelectorAll('.cake-layer');
   const btn = document.getElementById('explode-btn');
   exploded = !exploded;
-
   layers.forEach(l => {
     l.style.top = exploded ? l.dataset.explodeTop : l.dataset.stackTop;
   });
   visual.classList.toggle('exploded', exploded);
   btn.textContent = exploded ? '✦ Собрать торт' : '✦ Разобрать на слои';
 }
-
+ 
 document.querySelectorAll('.layer-pick-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.layer-pick-btn').forEach(b => b.classList.remove('active'));
@@ -1430,21 +1215,8 @@ document.querySelectorAll('.layer-pick-btn').forEach(btn => {
     buildLayers(currentCake);
   });
 });
-
+ 
 buildLayers('snikers');
-
-// ─── SCROLL REVEAL ───
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((e, i) => {
-    if (e.isIntersecting) {
-      setTimeout(() => e.target.classList.add('visible'), i * 60);
-      observer.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.1 });
-
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-document.querySelectorAll('.cat-divider').forEach(div => div.classList.add('visible'));
 </script>
 </body>
 </html>
