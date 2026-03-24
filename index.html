@@ -329,8 +329,13 @@ section { padding: 90px 5%; }
   padding: 4px 10px;
 }
 .card-fillings {
-  display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px;
-  min-height: 58px; align-content: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+  margin-bottom: 12px;
+  min-height: 56px;
+  align-content: flex-start;
 }
 .filling-tag {
   font-size: .7rem; padding: 3px 10px;
@@ -1129,10 +1134,10 @@ function renderCard(т) {
         <div class="card-body">
           <div class="card-name">${т.название || ''}</div>
           <div class="card-desc">${т.описание || ''}</div>
+           <div class="card-fillings">${fillingTags}</div>
           <div class="card-meta">
-  <div class="card-price">${цена}</div>
-  <div class="card-time">${т.срок_изготовления}</div>
-</div>
+            <div class="card-price">${цена}</div>
+          </div>
 <div class="card-fillings">${fillingTags}</div>
           <div class="card-actions">
             <button class="card-detail-btn" onclick="flipCard(this)">Подробнее ›</button>
