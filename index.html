@@ -258,6 +258,8 @@ section { padding: 90px 5%; }
   box-shadow: var(--shadow);
   transition: all .3s;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
 }
 .product-card:hover {
   transform: translateY(-6px);
@@ -274,7 +276,7 @@ section { padding: 90px 5%; }
 .card-img .card-emoji { filter: drop-shadow(0 8px 16px rgba(62,26,12,0.15)); transition: transform .3s; }
 .product-card:hover .card-emoji { transform: scale(1.08); }
 
-.card-body { padding: 20px; }
+.card-body { padding: 20px; display: flex; flex-direction: column; flex: 1; }
 .card-name {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.2rem; font-weight: 600;
@@ -283,6 +285,7 @@ section { padding: 90px 5%; }
 .card-desc {
   font-size: .82rem; color: var(--text-light);
   line-height: 1.6; margin-bottom: 14px;
+  .card-spacer { flex: 1; }
 }
 .card-meta {
   display: flex; justify-content: space-between;
@@ -702,7 +705,7 @@ footer {
           <div class="card-price">от 1 500 ₽</div>
           <div class="card-time">2–3 дня</div>
         </div>
-        <div class="card-fillings">
+        <div class="card-spacer"></div><div class="card-fillings">
           <span class="filling-tag">🍓 Клубника</span>
           <span class="filling-tag">🫐 Малина</span>
           <span class="filling-tag">🍒 Вишня</span>
@@ -720,7 +723,7 @@ footer {
           <div class="card-price">от 1 500 ₽</div>
           <div class="card-time">2–3 дня</div>
         </div>
-        <div class="card-fillings">
+        <div class="card-spacer"></div><div class="card-fillings">
           <span class="filling-tag">🥜 Соленая карамель</span>
         </div>
         <button class="card-btn" onclick="order('Сникерс (Бенто)')">Заказать</button>
