@@ -777,7 +777,6 @@ footer {
       Загружаем меню...
     </div>
   </div>
-  </div>
 </section>
  
 <!-- CAKE LAYERS -->
@@ -1093,7 +1092,7 @@ function renderCard(т) {
         <div class="card-back-title">${т.название || ''}</div>
         ${т.состав ? `<div class="card-back-row"><div class="card-back-label">Состав</div><div class="card-back-value">${т.состав}</div></div>` : ''}
         ${т.аллергены ? `<div class="card-back-row"><div class="card-back-label">Аллергены</div><div class="card-back-value">${т.аллергены}</div></div>` : ''}
-        ${т.кастомизация ? `<div class="card-back-row"><div class="card-back-label">Можно изменить</div><div class="card-back-value">${т.кастомизация}</div></div>` : ''}
+        ${(т.кастомизация || т.можно_поменять) ? `<div class="card-back-row"><div class="card-back-label">Можно изменить</div><div class="card-back-value">${т.кастомизация || т.можно_поменять}</div></div>` : ''}
         ${т.хранение ? `<div class="card-back-row"><div class="card-back-label">Срок хранения</div><div class="card-back-value">${т.хранение}</div></div>` : ''}
         ${т.срок_изготовления ? `<div class="card-back-row"><div class="card-back-label">Срок изготовления</div><div class="card-back-value">${т.срок_изготовления}</div></div>` : ''}
         ${т.минимальный_заказ ? `<div class="card-back-row"><div class="card-back-label">Минимальный заказ</div><div class="card-back-value">${т.минимальный_заказ}</div></div>` : ''}
@@ -1112,7 +1111,10 @@ async function loadMenu() {
     const res = await fetch(N8N_URL);
     if (!res.ok) throw new Error('Network error');
     const data = await res.json();
-    const товары = data.товары || [];
+    const товары = Array.isArray(data)
+      ? (data[0]?.товары || [])
+      : (data.товары || []);
+
  
     let html = '';
     CAT_ORDER.forEach(catId => {
