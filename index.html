@@ -329,7 +329,11 @@ section { padding: 90px 5%; }
   padding: 4px 10px;
 }
 .card-fillings {
-  display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;   /* добавили */
+  margin-bottom: 18px;/* было меньше */
 }
 .filling-tag {
   font-size: .7rem; padding: 3px 10px;
@@ -348,6 +352,28 @@ section { padding: 90px 5%; }
   margin-top: auto;
 }
 .card-btn:hover { background: var(--brown); }
+ 
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+.card-actions .card-detail-btn,
+.card-actions .card-btn {
+  flex: 1;
+  margin-top: 0;
+  padding: 10px;
+  min-height: 42px;
+  font-size: .82rem;
+  font-weight: 600;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
  
 /* Coming Soon cards */
 .coming-card {
@@ -1110,9 +1136,9 @@ function renderCard(т) {
             <div class="card-price">${цена}</div>
           </div>
           <div class="card-fillings">${fillingTags}</div>
-          <div style="display:flex;gap:8px;margin-top:auto;padding-top:10px;">
-            <button class="card-detail-btn" style="flex:1" onclick="flipCard(this)">Подробнее ›</button>
-            <button class="card-btn" style="flex:1;margin-top:0" onclick="order('${название}')">Заказать</button>
+          <div class="card-actions">
+            <button class="card-detail-btn" onclick="flipCard(this)">Подробнее ›</button>
+            <button class="card-btn" onclick="order('${название}')">Заказать</button>
           </div>
         </div>
       </div>
