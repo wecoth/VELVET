@@ -260,10 +260,14 @@ section { padding: 90px 5%; }
   cursor: default;
   display: flex;
   flex-direction: column;
-  min-height: 440px;
+  min-height: 560px;
   perspective: 1000px;
 }
-  
+  @media (max-width: 600px) {
+  .product-card {
+    min-height: 620px;
+  }
+}
 .product-card:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow-hover);
@@ -1093,7 +1097,7 @@ function renderCard(т) {
       <div class="card-front">
        <div class="card-img" style="background:${bg}">
   ${т.фото 
-  ? `<img src="ССЫЛКА_НА_ФОТО" alt="${т.название}" class="card-photo">`
+  ? `<img src="${photoUrl}" alt="${т.название}" class="card-photo">`
   : `<div class="card-emoji">${emoji}</div>`
 }
 </div>
