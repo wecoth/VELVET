@@ -1164,6 +1164,11 @@ function renderCard(т) {
       <div class="card-back">
         <div class="card-back-title">${т.название || ''}</div>
 
+        ${т.состав ? `<div class="card-back-row"><div class="card-back-label">Состав</div><div class="card-back-value">${т.состав}</div></div>` : ''}
+        ${т.аллергены ? `<div class="card-back-row"><div class="card-back-label">Аллергены</div><div class="card-back-value">${т.аллергены}</div></div>` : ''}
+        ${(т.кастомизация || т.можно_поменять) ? `<div class="card-back-row"><div class="card-back-label">Можно изменить</div><div class="card-back-value">${т.кастомизация || т.можно_поменять}</div></div>` : ''}
+        ${showMinOrder ? `<div class="card-back-row"><div class="card-back-label">Минимальный заказ</div><div class="card-back-value">${т.минимальный_заказ}</div></div>` : ''}
+
         ${т.сладость ? `
         <div class="card-back-sweet">
           <div class="card-back-sweet-label">Сладость</div>
@@ -1171,11 +1176,6 @@ function renderCard(т) {
         </div>` : ''}
 
         ${renderSizes(варианты)}
-
-        ${т.состав ? `<div class="card-back-row"><div class="card-back-label">Состав</div><div class="card-back-value">${т.состав}</div></div>` : ''}
-        ${т.аллергены ? `<div class="card-back-row"><div class="card-back-label">Аллергены</div><div class="card-back-value">${т.аллергены}</div></div>` : ''}
-        ${(т.кастомизация || т.можно_поменять) ? `<div class="card-back-row"><div class="card-back-label">Можно изменить</div><div class="card-back-value">${т.кастомизация || т.можно_поменять}</div></div>` : ''}
-        ${showMinOrder ? `<div class="card-back-row"><div class="card-back-label">Минимальный заказ</div><div class="card-back-value">${т.минимальный_заказ}</div></div>` : ''}
 
         <div class="card-back-btns">
           <button class="card-flip-back" onclick="flipCard(this)">← Назад</button>
