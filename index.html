@@ -776,6 +776,29 @@ footer {
   font-size: 1.5rem; cursor: pointer; color: var(--choco);
   background: none; border: none;
 }
+/* ─── FLOATING EMOJIS ─── */
+.hero-floats {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+.hero-left { position: relative; z-index: 1; }
+.float-emoji {
+  position: absolute;
+  font-size: 2rem;
+  animation: floatMove 6s ease-in-out infinite;
+  user-select: none;
+}
+.float-emoji.blurred { filter: blur(3px); opacity: 0.5; }
+.float-emoji.blurred2 { filter: blur(6px); opacity: 0.35; }
+
+@keyframes floatMove {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-12px) rotate(6deg); }
+  66% { transform: translateY(8px) rotate(-4deg); }
+}
 </style>
 </head>
 <body>
@@ -808,6 +831,21 @@ footer {
  
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-floats">
+    <!-- центр, чёткие -->
+    <span class="float-emoji" style="top:18%;left:72%;animation-delay:0s;font-size:2.2rem">🍰</span>
+    <span class="float-emoji" style="top:55%;left:80%;animation-delay:1.2s;font-size:1.8rem">🍓</span>
+    <span class="float-emoji" style="top:75%;left:65%;animation-delay:2.1s;font-size:2rem">🧁</span>
+    <!-- слегка блюр -->
+    <span class="float-emoji blurred" style="top:8%;left:55%;animation-delay:0.5s;font-size:1.5rem">🍒</span>
+    <span class="float-emoji blurred" style="top:40%;left:88%;animation-delay:1.8s;font-size:1.6rem">✨</span>
+    <span class="float-emoji blurred" style="top:82%;left:50%;animation-delay:0.9s;font-size:1.4rem">🌸</span>
+    <!-- сильный блюр по краям -->
+    <span class="float-emoji blurred2" style="top:5%;left:85%;animation-delay:1.5s;font-size:2.5rem">🎂</span>
+    <span class="float-emoji blurred2" style="top:30%;left:92%;animation-delay:2.8s;font-size:2rem">🫐</span>
+    <span class="float-emoji blurred2" style="top:90%;left:78%;animation-delay:0.3s;font-size:1.8rem">🍫</span>
+    <span class="float-emoji blurred2" style="top:60%;left:95%;animation-delay:2s;font-size:1.5rem">🍋</span>
+  </div>
   <div class="hero-left reveal">
     <div class="hero-tag">✦ Авторская кондитерская</div>
     <h1 class="hero-title">Velvet</h1>
