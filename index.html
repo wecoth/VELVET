@@ -1041,7 +1041,9 @@ window.addEventListener('scroll', () => {
   // show sticky tabs when catalog is in view
   const catalog = document.getElementById('catalog');
   if (catalog) {
-    const catalogTop = catalog.offsetTop - 120;
+    const catalogTabs = document.querySelector('.catalog-tabs');
+    const tabsBottom = catalogTabs ? catalogTabs.getBoundingClientRect().bottom : 0;
+    document.getElementById('sticky-tabs').classList.toggle('visible', tabsBottom < 0);
     document.getElementById('sticky-tabs').classList.toggle('visible', y > catalogTop);
   }
   
