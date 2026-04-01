@@ -2,9 +2,17 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Velvet — авторские торты на заказ в Краснодаре</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+  if (window.Telegram && window.Telegram.WebApp) {
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+    if (tg.requestFullscreen) tg.requestFullscreen();
+  }
+</script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;600&family=Nunito:wght@300;400;500;600;700&family=Bodoni+Moda:wght@400&display=swap" rel="stylesheet">
 <style>
@@ -53,6 +61,7 @@ nav {
   backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(196,133,90,0.12);
   transition: box-shadow .3s;
+  will-change: transform;
 }
 nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
 
@@ -773,8 +782,7 @@ footer {
   .layers-pick { justify-content: center; }
   .hero-tag { font-size: .65rem; padding: 4px 12px; }
   .hero-btns { margin-top: 20vh; }
-   nav { opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-   nav.scrolled { opacity: 1; pointer-events: all; }
+  nav { background: rgba(255,255,255,0.97); }
 }
 @media (max-width: 600px) {
   section { padding: 40px 5%; }
@@ -1046,7 +1054,7 @@ window.addEventListener('scroll', () => {
   
   // show back to top
   document.getElementById('back-to-top').classList.toggle('visible', y > 400);
-});
+}, { passive: true });
  
 // ─── MOBILE MENU ───
 function openMenu() { document.getElementById('mobile-nav').classList.add('open'); }
@@ -1064,8 +1072,8 @@ function flipCard(btn) {
  
 // ─── ORDER ───
 function order(product) {
-  const msg = encodeURIComponent(`Здравствуйте! Хочу заказать: ${product}`);
-  window.open(`https://t.me/DianaOmelyanenko?text=Привет!%20Интересует%20заказ%20десерта%2C%20можете%20рассказать%20подробнее%3F?text=${msg}`, '_blank');
+  const msg = encodeURIComponent(`Привет! Хочу заказать: ${product}`);
+  window.open(`https://t.me/DianaOmelyanenko?text=${msg}`, '_blank');
 }
  
 // ─── CATALOG TABS ───
@@ -1082,6 +1090,8 @@ document.querySelectorAll('#sticky-tabs .tab').forEach(btn => {
     const mainTab = document.querySelector(`.catalog-tabs .tab[data-filter="${filter}"]`);
     if (mainTab) mainTab.click();
     syncStickyTabs(filter);
+    // scroll to catalog section
+    document.querySelector('#catalog').scrollIntoView({behavior: 'smooth'});
   });
 });
 
@@ -1291,6 +1301,13 @@ async function loadMenu() {
  
 loadMenu();
 
+// ─── PREVENT ZOOM ───
+document.addEventListener('gesturestart', e => e.preventDefault(), { passive: false });
+document.addEventListener('gesturechange', e => e.preventDefault(), { passive: false });
+document.addEventListener('touchmove', e => {
+  if (e.touches.length > 1) e.preventDefault();
+}, { passive: false });
+
 // ─── FALLING EMOJIS ───
 (function() {
   const emojis = ['🍰','🍓','🧁','🍒','✨','🌸','🍮','🎂','🫐','🍫','🍋','🍪'];
@@ -1342,7 +1359,6 @@ loadMenu();
   setInterval(createEmoji, 3500);
 })();
  
-buildLayers('snikers');
 </script>
 </body>
 </html>
