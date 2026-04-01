@@ -912,28 +912,6 @@ footer {
   </div>
 </section>
  
-<!-- CAKE LAYERS -->
-<section id="layers-section">
-  <div class="layers-container">
-    <div class="layers-left reveal">
-      <div class="section-tag">— Из чего мы делаем</div>
-      <h2 class="section-title">Каждый слой<br>с любовью</h2>
-      <p class="section-desc">Разберём торт по слоям — нажми на кнопку и посмотри, что внутри. Только натуральные ингредиенты, никаких компромиссов.</p>
-      <div class="layers-pick">
-        <button class="layer-pick-btn active" data-cake="snikers">Сникерс</button>
-        <button class="layer-pick-btn" data-cake="krasnyy">Красный бархат</button>
-        <button class="layer-pick-btn" data-cake="tiramisu">Тирамису</button>
-      </div>
-      <button class="explode-btn" id="explode-btn" onclick="toggleExplode()">
-        ✦ Разобрать на слои
-      </button>
-    </div>
-    <div class="layers-visual" id="layers-visual">
-      <!-- layers injected by JS -->
-    </div>
-  </div>
-</section>
- 
 <!-- ABOUT -->
 <section id="about">
   <div class="about-img-wrap reveal">
@@ -1317,85 +1295,6 @@ loadMenu();
   }
   setInterval(createEmoji, 3500);
 })();
- 
-// ─── CAKE LAYERS ───
-const cakes = {
-  snikers: [
-    { name: 'Шоколадный бисквит', cls: 'layer-biscuit' },
-    { name: 'Арахисовый крем', cls: 'layer-cream' },
-    { name: 'Арахис', cls: 'layer-nuts' },
-    { name: 'Соленая карамель', cls: 'layer-caramel' },
-    { name: 'Шоколадный бисквит', cls: 'layer-biscuit' },
-    { name: 'Арахисовый крем', cls: 'layer-cream' },
-    { name: 'Арахис', cls: 'layer-nuts' },
-    { name: 'Соленая карамель', cls: 'layer-caramel' },
-    { name: 'Шоколадный бисквит', cls: 'layer-biscuit' },
-  ],
-  krasnyy: [
-    { name: 'Красный бисквит', cls: 'layer-berries' },
-    { name: 'Сырный крем', cls: 'layer-cream' },
-    { name: 'Ягодный конфи', cls: 'layer-berries' },
-    { name: 'Красный бисквит', cls: 'layer-berries' },
-    { name: 'Сырный крем', cls: 'layer-cream' },
-    { name: 'Белый шоколад', cls: 'layer-cream' },
-    { name: 'Красный бисквит', cls: 'layer-berries' },
-  ],
-  tiramisu: [
-    { name: 'Кофейный бисквит', cls: 'layer-coffee' },
-    { name: 'Кофейный мусс', cls: 'layer-mousse' },
-    { name: 'Маскарпоне', cls: 'layer-cream' },
-    { name: 'Кофейный бисквит', cls: 'layer-coffee' },
-    { name: 'Кофейный мусс', cls: 'layer-mousse' },
-    { name: 'Маскарпоне', cls: 'layer-cream' },
-    { name: 'Молочный шоколад', cls: 'layer-choco' },
-  ]
-};
- 
-let currentCake = 'snikers';
-let exploded = false;
- 
-function buildLayers(cakeName) {
-  const layers = cakes[cakeName];
-  const visual = document.getElementById('layers-visual');
-  visual.innerHTML = '';
-  visual.classList.remove('exploded');
-  exploded = false;
-  document.getElementById('explode-btn').textContent = '✦ Разобрать на слои';
-  const total = layers.length;
-  const centerY = 240;
-  const stackSpacing = 12;
-  layers.forEach((l, i) => {
-    const div = document.createElement('div');
-    div.className = `cake-layer ${l.cls}`;
-    div.setAttribute('data-name', l.name);
-    const offset = (i - Math.floor(total/2)) * stackSpacing;
-    div.style.top = (centerY + offset - 22) + 'px';
-    div.dataset.stackTop = div.style.top;
-    div.dataset.explodeTop = (40 + i * 50) + 'px';
-    visual.appendChild(div);
-  });
-}
- 
-function toggleExplode() {
-  const visual = document.getElementById('layers-visual');
-  const layers = visual.querySelectorAll('.cake-layer');
-  const btn = document.getElementById('explode-btn');
-  exploded = !exploded;
-  layers.forEach(l => {
-    l.style.top = exploded ? l.dataset.explodeTop : l.dataset.stackTop;
-  });
-  visual.classList.toggle('exploded', exploded);
-  btn.textContent = exploded ? '✦ Собрать торт' : '✦ Разобрать на слои';
-}
- 
-document.querySelectorAll('.layer-pick-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.layer-pick-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentCake = btn.dataset.cake;
-    buildLayers(currentCake);
-  });
-});
  
 buildLayers('snikers');
 </script>
