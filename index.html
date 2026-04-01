@@ -660,8 +660,9 @@ section { padding: 50px 5%; }
 #faq { background: var(--pink-1); }
 .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
 .faq-item {
-  background: var(--pink-1); border-radius: 16px;
+  background: var(--white); border-radius: 16px;
   overflow: hidden; transition: all .2s;
+  box-shadow: var(--shadow);
 }
 .faq-q {
   padding: 20px 24px;
@@ -997,8 +998,7 @@ footer {
 <!-- CONTACT -->
 <section id="contact">
   <div class="reveal">
-    <div class="section-tag">— Связаться с нами</div>
-    <h2 class="section-title">Готовы сделать заказ?</h2>
+   <h2 class="section-title" style="font-size:1.8rem;">Готовы сделать заказ?</h2>
     <p class="section-desc">Напишите нам — ответим быстро, поможем выбрать и согласуем все детали.</p>
     <div class="contact-btns">
       <a href="https://t.me/velvet_cakes" class="contact-btn btn-tg" target="_blank">
@@ -1038,13 +1038,11 @@ window.addEventListener('scroll', () => {
   const y = window.scrollY;
   document.getElementById('main-nav').classList.toggle('scrolled', y > 40);
   
-  // show sticky tabs when catalog is in view
-  const catalog = document.getElementById('catalog');
-  if (catalog) {
-    const catalogTabs = document.querySelector('.catalog-tabs');
-    const tabsBottom = catalogTabs ? catalogTabs.getBoundingClientRect().bottom : 0;
+  // show sticky tabs when catalog tabs scroll out of view
+  const catalogTabs = document.querySelector('.catalog-tabs');
+  if (catalogTabs) {
+    const tabsBottom = catalogTabs.getBoundingClientRect().bottom;
     document.getElementById('sticky-tabs').classList.toggle('visible', tabsBottom < 0);
-    document.getElementById('sticky-tabs').classList.toggle('visible', y > catalogTop);
   }
   
   // show back to top
