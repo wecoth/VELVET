@@ -88,7 +88,7 @@ nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
   min-height: 100vh;
   display: grid; grid-template-columns: 1fr 1fr;
   align-items: center;
-  padding: 100px 5% 60px;
+  padding: 80px 5% 40px;
   background: linear-gradient(135deg, #fff 0%, #fff5f5 50%, #fde8e8 100%);
   position: relative; overflow: hidden;
 }
@@ -728,8 +728,9 @@ footer {
  
 /* ─── RESPONSIVE ─── */
 @media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; text-align: center; padding-top: 120px; }
+  .hero { grid-template-columns: 1fr; text-align: center; padding-top: 84px; }
   .hero-left { display: flex; flex-direction: column; align-items: center; }
+  .hero-btns { flex-direction: row; flex-wrap: wrap; justify-content: center; }
   .hero-right { display: none; }
   #about { grid-template-columns: 1fr; }
   .about-img-wrap { max-width: 300px; margin: 0 auto; }
