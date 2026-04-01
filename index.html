@@ -47,7 +47,7 @@ body {
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   padding: 0 5%;
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; justify-content: center;
   height: 72px;
   background: rgba(255,255,255,0.88);
   backdrop-filter: blur(16px);
@@ -67,16 +67,19 @@ nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
   align-items: center;
   gap: 12px;
 }
-.nav-logo-sub {
+nav-logo-sub {
   font-family: 'Nunito', sans-serif;
   font-size: .65rem;
   font-weight: 400;
-  color: var(--text-light);
+  color: var(--choco);
   text-transform: none;
   letter-spacing: .5px;
   line-height: 1.4;
-  border-left: 1px solid rgba(62,26,12,0.2);
+  border-left: 1px solid var(--choco);
   padding-left: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .nav-links {
   display: flex; gap: 32px; list-style: none;
