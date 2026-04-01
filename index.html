@@ -508,6 +508,30 @@ section { padding: 50px 5%; }
   display: flex; gap: 8px; margin-top: auto; padding-top: 14px;
 }
 .card-back-btns .card-btn { flex: 1; margin-top: 0; }
+
+/* sweetness hearts */
+.card-back-sweet { margin-bottom: 12px; }
+.sweetness-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sweetness-hearts { display: flex; gap: 2px; align-items: center; }
+.heart { font-size: 1rem; line-height: 1; }
+.heart.full { color: var(--caramel); }
+.heart.half { color: var(--caramel); opacity: 0.5; }
+.heart.empty { color: var(--beige-dark); }
+
+/* sizes table */
+.card-back-sizes { margin-bottom: 12px; }
+.sizes-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+.sizes-table th {
+  font-size: .65rem; font-weight: 700; letter-spacing: .6px;
+  text-transform: uppercase; color: var(--text-light);
+  text-align: left; padding: 3px 0; border-bottom: 1px solid var(--beige-dark);
+}
+.sizes-table td {
+  font-size: .8rem; color: var(--text); padding: 4px 0;
+  border-bottom: 1px solid var(--pink-2);
+}
+.sizes-table tr:last-child td { border-bottom: none; }
+.sizes-price { font-weight: 700; color: var(--choco); }
 .card-flip-back {
   flex: 1; background: transparent;
   border: 1.5px solid rgba(62,26,12,0.2);
@@ -1065,6 +1089,68 @@ const CAT_NAMES = {
   'кат_003':'Трайфлы','кат_006':'Капкейки',
 };
  
+function renderHearts(val) {
+  if (!val) return '';
+  const full = Math.floor(val);
+  const half = val % 1 >= 0.5 ? 1 : 0;
+  const empty = 5 - full - half;
+  let html = '<div class="sweetness-hearts">';
+  for (let i = 0; i < full; i++) html += '<span class="heart full">♥</span>';
+  if (half) html += '<span class="heart half">♥</span>';
+  for (let i = 0; i < empty; i++) html += '<span class="heart empty">♥</span>';
+  html += '</div>';
+  return html;
+}
+
+function renderSizesTable(варианты) {
+  if (!варианты || !варианты.length) return '';
+  let rows = варианты.map(v => {
+    const вес = v.вес_г >= 1000 ? (v.вес_г / 1000) + ' кг' : v.вес_г + ' г';
+    const порции = v.порции ? `${v.порции} порц.` : '';
+    const цена = v.цена ? `${v.цена} ₽` : '';
+    return `<tr><td>${вес}</td><td>${порции}</td><td>${цена}</td></tr>`;
+  }).join('');
+  return `
+    <table class="sizes-table">
+      <thead><tr><th>Размер</th><th>Порции</th><th>Цена</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function renderHearts(сладость) {
+  if (!сладость) return '';
+  const full = Math.floor(сладость);
+  const half = (сладость % 1) >= 0.5 ? 1 : 0;
+  const empty = 5 - full - half;
+  const heartFull = `<svg viewBox="0 0 24 24" fill="#C4855A"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+  const heartHalf = `<svg viewBox="0 0 24 24"><defs><linearGradient id="hg"><stop offset="50%" stop-color="#C4855A"/><stop offset="50%" stop-color="#EDD9C8"/></linearGradient></defs><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="url(#hg)"/></svg>`;
+  const heartEmpty = `<svg viewBox="0 0 24 24" fill="#EDD9C8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+  let html = '<div class="hearts">';
+  for (let i = 0; i < full; i++) html += `<span class="heart-full">${heartFull}</span>`;
+  if (half) html += `<span class="heart-half">${heartHalf}</span>`;
+  for (let i = 0; i < empty; i++) html += `<span class="heart-empty">${heartEmpty}</span>`;
+  html += '</div>';
+  return html;
+}
+
+function renderSizes(варианты) {
+  if (!варианты || !варианты.length) return '';
+  const rows = варианты.map(в => `
+    <tr>
+      <td>${в.вес ? Math.round(в.вес/1000*10)/10 + ' кг' : в.название_варианта || ''}</td>
+      <td>${в.порции ? в.порции + ' порц.' : '—'}</td>
+      <td class="sizes-price">${в.цена ? в.цена.toLocaleString('ru') + ' ₽' : '—'}</td>
+    </tr>`).join('');
+  return `
+    <div class="card-back-sizes">
+      <div class="card-back-label">Размеры и цены</div>
+      <table class="sizes-table">
+        <thead><tr><th>Вес</th><th>Порции</th><th>Цена</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
 function renderCard(т) {
   const slug = CAT_SLUG[т.id_категории] || 'other';
   const emoji = EMOJI[т.id_категории] || '🍰';
@@ -1072,13 +1158,15 @@ function renderCard(т) {
   const fillingTags = (т.начинки || []).map(n => `<span class="filling-tag">${n}</span>`).join('');
   const цена = т.цена ? `от ${т.цена} ₽` : 'Уточнить';
   const название = (т.название || '').replace(/'/g, "\\'");
+  const варианты = (т.варианты || []).filter(в => в.вес && в.цена);
+  const showMinOrder = т.минимальный_заказ && parseInt(т.минимальный_заказ) > 1;
 
   return `
   <div class="product-card reveal" data-cat="${slug}">
     <div class="card-inner">
       <div class="card-front">
        <div class="card-img" style="background:${bg}">
- ${т.фото 
+ ${т.фото
   ? `<img src="${т.фото}" alt="${т.название}" class="card-photo">`
   : `<div class="card-emoji">${emoji}</div>`
 }
@@ -1101,12 +1189,20 @@ function renderCard(т) {
       </div>
       <div class="card-back">
         <div class="card-back-title">${т.название || ''}</div>
+
+        ${т.сладость ? `
+        <div class="card-back-sweet">
+          <div class="card-back-sweet-label">Сладость</div>
+          ${renderHearts(т.сладость)}
+        </div>` : ''}
+
+        ${renderSizes(варианты)}
+
         ${т.состав ? `<div class="card-back-row"><div class="card-back-label">Состав</div><div class="card-back-value">${т.состав}</div></div>` : ''}
         ${т.аллергены ? `<div class="card-back-row"><div class="card-back-label">Аллергены</div><div class="card-back-value">${т.аллергены}</div></div>` : ''}
         ${(т.кастомизация || т.можно_поменять) ? `<div class="card-back-row"><div class="card-back-label">Можно изменить</div><div class="card-back-value">${т.кастомизация || т.можно_поменять}</div></div>` : ''}
-        ${т.хранение ? `<div class="card-back-row"><div class="card-back-label">Срок хранения</div><div class="card-back-value">${т.хранение}</div></div>` : ''}
-        ${т.срок_изготовления ? `<div class="card-back-row"><div class="card-back-label">Срок изготовления</div><div class="card-back-value">${т.срок_изготовления}</div></div>` : ''}
-        ${т.минимальный_заказ ? `<div class="card-back-row"><div class="card-back-label">Минимальный заказ</div><div class="card-back-value">${т.минимальный_заказ}</div></div>` : ''}
+        ${showMinOrder ? `<div class="card-back-row"><div class="card-back-label">Минимальный заказ</div><div class="card-back-value">${т.минимальный_заказ}</div></div>` : ''}
+
         <div class="card-back-btns">
           <button class="card-flip-back" onclick="flipCard(this)">← Назад</button>
           <button class="card-btn" onclick="order('${название}')">Заказать</button>
@@ -1115,7 +1211,8 @@ function renderCard(т) {
     </div>
   </div>`;
 }
- 
+
+
 async function loadMenu() {
   const grid = document.getElementById('products-grid');
   try {
