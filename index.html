@@ -1104,12 +1104,17 @@ function renderHearts(сладость) {
 
 function renderSizes(варианты) {
   if (!варианты || !варианты.length) return '';
-  const rows = варианты.map(в => `
+  const rows = варианты.map(в => {
+    const вес = в.вес >= 1000 
+      ? (Math.round(в.вес/100)/10) + ' кг' 
+      : в.вес + ' г';
+    return `
     <tr>
-      <td>${в.вес ? Math.round(в.вес/1000*10)/10 + ' кг' : в.название_варианта || ''}</td>
+      <td>${вес}</td>
       <td>${в.порции ? в.порции + ' порц.' : '—'}</td>
-      <td class="sizes-price">${в.цена ? в.цена.toLocaleString('ru') + ' ₽' : '—'}</td>
-    </tr>`).join('');
+      <td class="sizes-price">${в.цена ? Number(в.цена).toLocaleString('ru') + ' ₽' : '—'}</td>
+    </tr>`;
+  }).join('');
   return `
     <div class="card-back-sizes">
       <div class="card-back-label">Размеры и цены</div>
@@ -1127,7 +1132,7 @@ function renderCard(т) {
   const fillingTags = (т.начинки || []).map(n => `<span class="filling-tag">${n}</span>`).join('');
   const цена = т.цена ? `от ${т.цена} ₽` : 'Уточнить';
   const название = (т.название || '').replace(/'/g, "\\'");
-  const варианты = (т.варианты || []).filter(в => в.вес && в.цена);
+  const варианты = (т.размеры || т.варианты || []).filter(в => в.вес && в.цена);
   const showMinOrder = т.минимальный_заказ && parseInt(т.минимальный_заказ) > 1;
 
   return `
