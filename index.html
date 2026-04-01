@@ -511,12 +511,9 @@ section { padding: 50px 5%; }
 
 /* sweetness hearts */
 .card-back-sweet { margin-bottom: 12px; }
-.sweetness-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.sweetness-hearts { display: flex; gap: 2px; align-items: center; }
-.heart { font-size: 1rem; line-height: 1; }
-.heart.full { color: var(--caramel); }
-.heart.half { color: var(--caramel); opacity: 0.5; }
-.heart.empty { color: var(--beige-dark); }
+.card-back-sweet-label { font-size: .68rem; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--text-light); margin-bottom: 5px; }
+.hearts { display: flex; gap: 3px; align-items: center; }
+.heart-full svg, .heart-half svg, .heart-empty svg { width: 18px; height: 18px; display: block; }
 
 /* sizes table */
 .card-back-sizes { margin-bottom: 12px; }
@@ -1089,34 +1086,6 @@ const CAT_NAMES = {
   'кат_003':'Трайфлы','кат_006':'Капкейки',
 };
  
-function renderHearts(val) {
-  if (!val) return '';
-  const full = Math.floor(val);
-  const half = val % 1 >= 0.5 ? 1 : 0;
-  const empty = 5 - full - half;
-  let html = '<div class="sweetness-hearts">';
-  for (let i = 0; i < full; i++) html += '<span class="heart full">♥</span>';
-  if (half) html += '<span class="heart half">♥</span>';
-  for (let i = 0; i < empty; i++) html += '<span class="heart empty">♥</span>';
-  html += '</div>';
-  return html;
-}
-
-function renderSizesTable(варианты) {
-  if (!варианты || !варианты.length) return '';
-  let rows = варианты.map(v => {
-    const вес = v.вес_г >= 1000 ? (v.вес_г / 1000) + ' кг' : v.вес_г + ' г';
-    const порции = v.порции ? `${v.порции} порц.` : '';
-    const цена = v.цена ? `${v.цена} ₽` : '';
-    return `<tr><td>${вес}</td><td>${порции}</td><td>${цена}</td></tr>`;
-  }).join('');
-  return `
-    <table class="sizes-table">
-      <thead><tr><th>Размер</th><th>Порции</th><th>Цена</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
-}
-
 function renderHearts(сладость) {
   if (!сладость) return '';
   const full = Math.floor(сладость);
