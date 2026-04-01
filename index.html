@@ -325,21 +325,30 @@ section { padding: 90px 5%; }
   font-size: 1.2rem;
   font-weight: 600;
   color: var(--choco);
-  margin-bottom: 6px;
-  margin-top: 0px;
-  min-height: 34px; /* выравниваем заголовки */
+  margin-bottom: 4px;
+  margin-top: 12px;
+  min-height: 34px;
 }
 
 .card-desc {
   font-size: .82rem;
   color: var(--text-light);
   line-height: 1.6;
-  margin-bottom: 2px;
-  min-height: 0px; /* выравниваем описания */
+  margin-bottom: 8px;
+  min-height: 0px;
+}
+
+.card-fillings-label {
+  font-size: .7rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 4px;
 }
 
 .card-bottom {
-  margin-top: auto;            /* прижимает низ карточки вниз */
+  margin-top: auto;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -349,7 +358,7 @@ section { padding: 90px 5%; }
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  min-height: 60px;            /* одинаковая зона начинок */
+  min-height: 30px;
   align-content: flex-start;
 }
 
@@ -1205,6 +1214,7 @@ function renderCard(т) {
           <div class="card-name">${т.название || ''}</div>
           <div class="card-desc">${т.описание || ''}</div>
           <div class="card-bottom">
+            ${fillingTags ? `<div class="card-fillings-label">Начинки</div>` : ''}
             <div class="card-fillings">${fillingTags}</div>
             <div class="card-meta">
               <div class="card-price">${цена}</div>
