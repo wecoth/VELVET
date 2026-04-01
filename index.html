@@ -1229,11 +1229,15 @@ loadMenu();
   if (!container) return;
 
   let lastLeft = -1;
+  let lastEmoji = '';
 
   function createEmoji() {
     const el = document.createElement('span');
     el.className = 'float-emoji';
-    const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+    let emoji;
+    do { emoji = emojis[Math.floor(Math.random() * emojis.length)]; }
+    while (emoji === lastEmoji);
+    lastEmoji = emoji;
     el.textContent = emoji;
 
     // равномерно по горизонтали, не рядом с предыдущим
