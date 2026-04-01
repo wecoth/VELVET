@@ -55,6 +55,37 @@ nav {
   transition: box-shadow .3s;
 }
 nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
+
+/* ─── STICKY TABS ─── */
+.sticky-tabs {
+  display: none;
+  position: fixed; top: 72px; left: 0; right: 0; z-index: 99;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(24px);
+  border-bottom: none;
+  padding: 8px 5%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.sticky-tabs::-webkit-scrollbar { display: none; }
+.sticky-tabs.visible { display: flex; gap: 6px; flex-wrap: nowrap; }
+.sticky-tabs .tab {
+  padding: 7px 16px; font-size: .78rem; white-space: nowrap; flex-shrink: 0;
+}
+
+/* ─── BACK TO TOP ─── */
+.back-to-top {
+  position: fixed; bottom: 28px; right: 20px; z-index: 200;
+  width: 44px; height: 44px;
+  background: var(--choco); color: #fff;
+  border: none; border-radius: 50%;
+  font-size: 1.2rem; cursor: pointer;
+  display: none; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(62,26,12,0.3);
+  transition: all .2s;
+}
+.back-to-top.visible { display: flex; }
+.back-to-top:hover { background: var(--brown); transform: translateY(-2px); }
  
 .nav-logo {
   font-family: 'Bodoni Moda', serif;
@@ -988,11 +1019,34 @@ footer {
     <a href="#contact">Контакты</a>
   </div>
 </footer>
+
+<!-- STICKY TABS -->
+<div class="sticky-tabs" id="sticky-tabs">
+  <button class="tab active" data-filter="all">Все</button>
+  <button class="tab" data-filter="бенто">Бенто-торты</button>
+  <button class="tab" data-filter="торты">Торты</button>
+  <button class="tab" data-filter="трайфлы">Трайфлы</button>
+  <button class="tab" data-filter="капкейки">Капкейки</button>
+</div>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
  
 <script>
 // ─── NAV SCROLL ───
 window.addEventListener('scroll', () => {
-  document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 40);
+  const y = window.scrollY;
+  document.getElementById('main-nav').classList.toggle('scrolled', y > 40);
+  
+  // show sticky tabs when catalog is in view
+  const catalog = document.getElementById('catalog');
+  if (catalog) {
+    const catalogTop = catalog.offsetTop - 120;
+    document.getElementById('sticky-tabs').classList.toggle('visible', y > catalogTop);
+  }
+  
+  // show back to top
+  document.getElementById('back-to-top').classList.toggle('visible', y > 400);
 });
  
 // ─── MOBILE MENU ───
@@ -1016,6 +1070,22 @@ function order(product) {
 }
  
 // ─── CATALOG TABS ───
+function syncStickyTabs(filter) {
+  document.querySelectorAll('#sticky-tabs .tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.filter === filter);
+  });
+}
+
+document.querySelectorAll('#sticky-tabs .tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const filter = btn.dataset.filter;
+    // click the main tab
+    const mainTab = document.querySelector(`.catalog-tabs .tab[data-filter="${filter}"]`);
+    if (mainTab) mainTab.click();
+    syncStickyTabs(filter);
+  });
+});
+
 function initTabs() {
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -1026,6 +1096,7 @@ function initTabs() {
         if (filter === 'all') card.classList.remove('hidden');
         else card.classList.toggle('hidden', card.dataset.cat !== filter);
       });
+      syncStickyTabs(filter);
       document.querySelectorAll('.cat-divider').forEach(div => {
         div.classList.toggle('visible', filter === 'all');
       });
