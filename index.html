@@ -57,11 +57,26 @@ nav {
 nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
  
 .nav-logo {
-  font-family: 'Bodoni Moda', serif; text-transform: uppercase;
+  font-family: 'Bodoni Moda', serif;
+  text-transform: uppercase;
   font-size: 2rem;
   color: var(--choco);
   text-decoration: none;
   letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.nav-logo-sub {
+  font-family: 'Nunito', sans-serif;
+  font-size: .65rem;
+  font-weight: 400;
+  color: var(--text-light);
+  text-transform: none;
+  letter-spacing: .5px;
+  line-height: 1.4;
+  border-left: 1px solid rgba(62,26,12,0.2);
+  padding-left: 12px;
 }
 .nav-links {
   display: flex; gap: 32px; list-style: none;
