@@ -371,33 +371,23 @@ section { padding: 50px 5%; }
   font-weight: 500; letter-spacing: .3px;
 }
 .carousel-track-wrap {
-  position: relative;
-  touch-action: pan-y pinch-zoom;
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  display: flex;
 }
+.carousel-track-wrap::-webkit-scrollbar { display: none; }
 .carousel-track {
-  display: block;
-  position: relative;
+  display: flex;
+  width: 100%;
 }
 .carousel-slide {
-  display: none;
-  width: 100%;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
   padding: 4px 5% 16px;
   box-sizing: border-box;
-  animation: slideIn 0.35s cubic-bezier(.4,0,.2,1);
-}
-.carousel-slide.active {
-  display: block;
-}
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(30px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-@keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-30px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-.carousel-slide.slide-left {
-  animation: slideInLeft 0.35s cubic-bezier(.4,0,.2,1);
 }
 /* карточка "висит в воздухе" */
 .carousel-slide .product-card {
@@ -1425,57 +1415,28 @@ function buildCarousel(catId, items) {
 }
 
 function initCarousel(slug) {
-  const track = document.getElementById(`track-${slug}`);
   const wrap = document.getElementById(`wrap-${slug}`);
   const dotsEl = document.getElementById(`dots-${slug}`);
-  if (!track || !wrap) return;
+  if (!wrap || !dotsEl) return;
 
-  let current = 0;
-  const slides = track.querySelectorAll('.carousel-slide');
-  const total = slides.length;
-
-  // Показать первый слайд
-  slides[0]?.classList.add('active');
-
-  if (total < 2) return;
-
-  function goTo(idx, fromRight = true) {
-    slides[current]?.classList.remove('active', 'slide-left');
-    current = Math.max(0, Math.min(idx, total - 1));
-    const slide = slides[current];
-    slide.classList.remove('slide-left');
-    void slide.offsetWidth; // reflow
-    if (!fromRight) slide.classList.add('slide-left');
-    slide.classList.add('active');
-    if (dotsEl) {
+  // scroll-snap делает свайп сам — просто синхронизируем dots
+  let t;
+  wrap.addEventListener('scroll', () => {
+    clearTimeout(t);
+    t = setTimeout(() => {
+      const idx = Math.round(wrap.scrollLeft / wrap.clientWidth);
       dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => {
-        d.classList.toggle('active', i === current);
+        d.classList.toggle('active', i === idx);
       });
-    }
-  }
+    }, 60);
+  }, { passive: true });
 
-  if (dotsEl) {
-    dotsEl.querySelectorAll('.carousel-dot').forEach(dot => {
-      dot.addEventListener('click', () => {
-        const idx = parseInt(dot.dataset.index);
-        goTo(idx, idx > current);
-      });
+  // Клик по dot
+  dotsEl.querySelectorAll('.carousel-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      wrap.scrollTo({ left: parseInt(dot.dataset.index) * wrap.clientWidth, behavior: 'smooth' });
     });
-  }
-
-  let startX = 0, startY = 0;
-  wrap.addEventListener('touchstart', e => {
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-  }, { passive: true });
-
-  wrap.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - startX;
-    const dy = e.changedTouches[0].clientY - startY;
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
-      goTo(dx < 0 ? current + 1 : current - 1, dx < 0);
-    }
-  }, { passive: true });
+  });
 }
 
 async function loadMenu() {
@@ -1488,12 +1449,6 @@ async function loadMenu() {
     const товары = Array.isArray(data)
       ? (data[0]?.товары || [])
       : (data.товары || []);
-
-    // DEBUG — логируем первый товар
-    if (товары.length > 0) {
-      console.log('Первый товар:', JSON.stringify(товары[0], null, 2));
-      console.log('Всего товаров:', товары.length);
-    }
 
     let html = '';
     CAT_ORDER.forEach(catId => {
@@ -1516,22 +1471,8 @@ async function loadMenu() {
     observeReveal();
 
   } catch(e) {
+    if (loading) loading.innerHTML = 'Не удалось загрузить меню. Попробуйте обновить страницу.';
     console.error('Menu load error:', e);
-    // Показать заглушку с одной карточкой чтобы проверить что рендер работает
-    if (loading) loading.style.display = 'none';
-    const testItems = [{
-      id_категории: 'кат_001',
-      название: 'Тестовая карточка',
-      описание: 'Данные загружаются... Проверьте подключение к n8n',
-      начинки: ['Клубника', 'Малина'],
-      цена: '1500',
-      фото: null,
-      сладость: 3,
-      размеры: []
-    }];
-    container.innerHTML = buildCarousel('кат_001', testItems);
-    initCarousel('бенто');
-    initTabs();
   }
 }
 
