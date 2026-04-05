@@ -86,9 +86,8 @@ nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
   border-bottom: none;
   padding: 8px 5%;
 }
-.sticky-tabs.visible { display: flex; justify-content: center; padding: 8px 4%; }
-.sticky-tabs .catalog-tabs { width: 100%; max-width: 480px; display: flex; }
-.sticky-tabs .tab { flex: 1; text-align: center; }
+.sticky-tabs.visible { display: flex; padding: 8px 5%; }
+.sticky-tabs .catalog-tabs { width: 100%; }
 
 /* ─── BACK TO TOP ─── */
 .back-to-top {
@@ -301,12 +300,13 @@ section { padding: 50px 5%; }
 /* ─── CATALOG ─── */
 #catalog { background: var(--pink-1); }
 .catalog-head {
-  display: flex; justify-content: space-between;
-  align-items: flex-end; flex-wrap: wrap; gap: 20px;
+  display: flex; flex-direction: column;
+  align-items: flex-start; gap: 20px;
   margin-bottom: 36px;
 }
 .catalog-tabs {
-  display: inline-flex;
+  display: flex;
+  width: 100%;
   background: rgba(62,26,12,0.07);
   border-radius: 50px;
   padding: 4px;
@@ -315,7 +315,7 @@ section { padding: 50px 5%; }
   flex-wrap: nowrap;
   overflow-x: auto;
   scrollbar-width: none;
-  max-width: 100%;
+  box-sizing: border-box;
 }
 .catalog-tabs::-webkit-scrollbar { display: none; }
 .tab-slider {
@@ -331,13 +331,14 @@ section { padding: 50px 5%; }
   left: 0;
 }
 .tab {
-  padding: 8px clamp(10px, 3vw, 20px); border-radius: 50px;
-  border: none;
+  flex: 1;
+  padding: 9px 8px; border-radius: 50px;
+  border: none; text-align: center;
   background: transparent; color: var(--text-mid);
-  font-size: clamp(.72rem, 2.5vw, .82rem); font-weight: 600;
+  font-size: clamp(.72rem, 2.8vw, .85rem); font-weight: 600;
   cursor: pointer; transition: color .2s; font-family: 'Nunito', sans-serif;
   position: relative; z-index: 1;
-  white-space: nowrap; flex-shrink: 0;
+  white-space: nowrap;
 }
 .tab.active { color: #fff; }
 .tab:not(.active):hover { color: var(--choco); }
@@ -1178,13 +1179,12 @@ function scrollToCatalogAndFilter(filter) {
   const catalog = document.querySelector('#catalog');
   if (!catalog) return;
   applyFilter(filter);
-  const rect = catalog.getBoundingClientRect();
-  // скроллим только если каталог не виден
-  const alreadyInCatalog = rect.top < 80 && rect.bottom > 80;
-  if (!alreadyInCatalog) {
-    const top = rect.top + window.scrollY - 60;
-    window.scrollTo({ top, behavior: 'smooth' });
-  }
+  // Всегда скроллим к началу сетки товаров (под sticky-nav)
+  const grid = document.getElementById('products-grid');
+  const target = grid || catalog;
+  const navHeight = 56 + 52; // nav + sticky tabs
+  const top = target.getBoundingClientRect().top + window.scrollY - navHeight - 12;
+  window.scrollTo({ top, behavior: 'smooth' });
 }
 
 document.querySelectorAll('#catalog-tabs-sticky .tab').forEach(btn => {
