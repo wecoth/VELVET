@@ -1090,24 +1090,27 @@ footer {
  
 <script>
 // ─── NAV SCROLL ───
+// вычислить порог показа nav один раз после загрузки
+let navThreshold = 0;
+function calcNavThreshold() {
+  const hero = document.querySelector('.hero');
+  if (hero) navThreshold = hero.offsetTop + hero.offsetHeight * 0.4;
+}
+window.addEventListener('load', calcNavThreshold);
+
 window.addEventListener('scroll', () => {
   const y = window.scrollY;
   document.getElementById('main-nav').classList.toggle('scrolled', y > 40);
 
-  // show nav only when hero title scrolls out of view
-  const heroTitle = document.querySelector('.hero-title');
-  if (heroTitle) {
-    const titleBottom = heroTitle.getBoundingClientRect().bottom;
-    document.getElementById('main-nav').classList.toggle('nav-visible', titleBottom < 56);
-  }
+  // показываем nav когда проскроллили 40% hero — и больше не скрываем
+  document.getElementById('main-nav').classList.toggle('nav-visible', y > navThreshold);
   
   // show sticky tabs when catalog tabs scroll out of view
-  const catalogTabs = document.querySelector('.catalog-tabs');
-  if (catalogTabs) {
-    const tabsBottom = catalogTabs.getBoundingClientRect().bottom;
+  const catalogTabsEl = document.getElementById('catalog-tabs-main');
+  if (catalogTabsEl) {
+    const tabsBottom = catalogTabsEl.getBoundingClientRect().bottom;
     const catalogSection = document.querySelector('#catalog');
     const catalogBottom = catalogSection ? catalogSection.getBoundingClientRect().bottom : 9999;
-    // show sticky tabs between: catalog tabs gone + catalog still visible
     const shouldShow = tabsBottom < 0 && catalogBottom > 0;
     document.getElementById('sticky-tabs').classList.toggle('visible', shouldShow);
   }
@@ -1140,14 +1143,10 @@ function order(product) {
 function moveSlider(tabsEl, activeTab, animate) {
   const slider = tabsEl.querySelector('.tab-slider');
   if (!slider || !activeTab) return;
-  if (!animate) {
-    slider.style.transition = 'none';
-  }
-  // offsetLeft считается относительно родителя — нам нужно relative to .catalog-tabs
-  const tabsRect = tabsEl.getBoundingClientRect();
-  const tabRect = activeTab.getBoundingClientRect();
-  slider.style.left = (tabRect.left - tabsRect.left) + 'px';
-  slider.style.width = tabRect.width + 'px';
+  if (!animate) slider.style.transition = 'none';
+  // offsetLeft работает надёжнее чем getBoundingClientRect для скрытых элементов
+  slider.style.left = activeTab.offsetLeft + 'px';
+  slider.style.width = activeTab.offsetWidth + 'px';
   if (!animate) {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => { slider.style.transition = ''; });
@@ -1179,8 +1178,13 @@ function scrollToCatalogAndFilter(filter) {
   const catalog = document.querySelector('#catalog');
   if (!catalog) return;
   applyFilter(filter);
-  const top = catalog.getBoundingClientRect().top + window.scrollY - 60;
-  window.scrollTo({ top, behavior: 'smooth' });
+  const rect = catalog.getBoundingClientRect();
+  // скроллим только если каталог не виден
+  const alreadyInCatalog = rect.top < 80 && rect.bottom > 80;
+  if (!alreadyInCatalog) {
+    const top = rect.top + window.scrollY - 60;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
 }
 
 document.querySelectorAll('#catalog-tabs-sticky .tab').forEach(btn => {
@@ -1197,28 +1201,19 @@ function initTabs() {
       tab.addEventListener('click', () => { applyFilter(tab.dataset.filter); });
     });
   });
-  // применяем бенто — слайдер без анимации
-  const filter = 'бенто';
-  ['catalog-tabs-main', 'catalog-tabs-sticky'].forEach(id => {
-    const tabsEl = document.getElementById(id);
-    if (!tabsEl) return;
-    let activeTab = null;
-    tabsEl.querySelectorAll('.tab').forEach(t => {
-      const isActive = t.dataset.filter === filter;
-      t.classList.toggle('active', isActive);
-      if (isActive) activeTab = t;
-    });
-    // двойной rAF чтобы DOM точно отрисовался
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
+  // применяем бенто — слайдер без анимации, ждём полной отрисовки
+  applyFilter('бенто');
+  // дополнительно обновляем слайдеры после paint через setTimeout
+  setTimeout(() => {
+    ['catalog-tabs-main', 'catalog-tabs-sticky'].forEach(id => {
+      const tabsEl = document.getElementById(id);
+      if (!tabsEl) return;
+      const activeTab = tabsEl.querySelector('.tab.active');
+      if (activeTab && activeTab.offsetWidth > 0) {
         moveSlider(tabsEl, activeTab, false);
-      });
+      }
     });
-  });
-  document.querySelectorAll('.product-card, .coming-card').forEach(card => {
-    card.classList.toggle('hidden', card.dataset.cat !== filter);
-  });
-  document.querySelectorAll('.cat-divider').forEach(div => div.classList.remove('visible'));
+  }, 50);
 }
  
 // Hero cat links
