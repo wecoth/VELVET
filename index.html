@@ -1064,7 +1064,11 @@ window.addEventListener('scroll', () => {
   const catalogTabs = document.querySelector('.catalog-tabs');
   if (catalogTabs) {
     const tabsBottom = catalogTabs.getBoundingClientRect().bottom;
-    document.getElementById('sticky-tabs').classList.toggle('visible', tabsBottom < 0);
+    const catalogSection = document.querySelector('#catalog');
+    const catalogBottom = catalogSection ? catalogSection.getBoundingClientRect().bottom : 9999;
+    // show sticky tabs between: catalog tabs gone + catalog still visible
+    const shouldShow = tabsBottom < 56 && catalogBottom > 56;
+    document.getElementById('sticky-tabs').classList.toggle('visible', shouldShow);
   }
   
   // show back to top
@@ -1113,8 +1117,9 @@ function scrollToCatalogAndFilter(filter) {
   if (!catalog) return;
   // apply filter first
   applyFilter(filter);
-  // then scroll smoothly to catalog
-  catalog.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // scroll with offset to account for fixed nav (56px) + some breathing room
+  const top = catalog.getBoundingClientRect().top + window.scrollY - 60;
+  window.scrollTo({ top, behavior: 'smooth' });
 }
 
 document.querySelectorAll('#sticky-tabs .tab').forEach(btn => {
