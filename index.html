@@ -350,70 +350,80 @@ section { padding: 50px 5%; }
 }
 
 /* ─── CAROUSEL CATALOG ─── */
+#catalog { background: var(--pink-1); padding: 0; }
+
 .cat-section {
-  padding: 0;
+  padding: 0 0 8px;
 }
 .cat-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 28px 5% 14px;
+  padding: 32px 5% 16px;
 }
 .cat-section-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.5rem; font-weight: 600;
+  font-size: 1.6rem; font-weight: 600;
   color: var(--choco);
 }
 .cat-section-count {
-  font-size: .78rem; color: var(--text-light);
-  font-weight: 500;
+  font-size: .75rem; color: var(--text-light);
+  font-weight: 500; letter-spacing: .3px;
 }
 .carousel-track-wrap {
   overflow: hidden;
   position: relative;
+  /* высота = карточка + отступ снизу */
 }
 .carousel-track {
   display: flex;
-  gap: 0;
-  transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+  transition: transform 0.42s cubic-bezier(.4,0,.2,1);
   will-change: transform;
   touch-action: pan-y pinch-zoom;
+  align-items: stretch;
 }
 .carousel-slide {
   flex: 0 0 100%;
   width: 100%;
-  padding: 0 5% 32px;
+  padding: 4px 5% 8px;
   box-sizing: border-box;
+}
+/* карточка "висит в воздухе" */
+.carousel-slide .product-card {
+  box-shadow: 0 8px 40px rgba(62,26,12,0.13), 0 2px 8px rgba(62,26,12,0.07);
+  border-radius: 20px;
+  overflow: hidden;
 }
 .carousel-dots {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 6px;
-  padding: 10px 0 24px;
+  padding: 14px 0 20px;
 }
 .carousel-dot {
   width: 6px; height: 6px;
   border-radius: 50%;
   background: rgba(62,26,12,0.15);
-  transition: all .25s;
+  transition: all .28s cubic-bezier(.4,0,.2,1);
   cursor: pointer;
+  flex-shrink: 0;
 }
 .carousel-dot.active {
   background: var(--choco);
-  width: 18px;
+  width: 20px;
   border-radius: 3px;
 }
 .cat-section-divider {
   height: 1px;
-  background: var(--beige-dark);
-  margin: 0 5%;
+  background: linear-gradient(90deg, transparent, var(--beige-dark) 20%, var(--beige-dark) 80%, transparent);
+  margin: 0 5% 0;
 }
  
 .product-card {
   background: var(--white);
   border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: var(--shadow);
   transition: box-shadow .3s;
   cursor: default;
   display: flex;
