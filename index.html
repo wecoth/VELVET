@@ -371,21 +371,33 @@ section { padding: 50px 5%; }
   font-weight: 500; letter-spacing: .3px;
 }
 .carousel-track-wrap {
-  overflow: hidden;
   position: relative;
+  touch-action: pan-y pinch-zoom;
 }
 .carousel-track {
-  display: flex;
-  transition: transform 0.42s cubic-bezier(.4,0,.2,1);
-  will-change: transform;
-  touch-action: pan-y pinch-zoom;
-  align-items: flex-start;
+  display: block;
+  position: relative;
 }
 .carousel-slide {
-  flex: 0 0 100%;
+  display: none;
   width: 100%;
-  padding: 4px 5% 8px;
+  padding: 4px 5% 16px;
   box-sizing: border-box;
+  animation: slideIn 0.35s cubic-bezier(.4,0,.2,1);
+}
+.carousel-slide.active {
+  display: block;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.carousel-slide.slide-left {
+  animation: slideInLeft 0.35s cubic-bezier(.4,0,.2,1);
 }
 /* карточка "висит в воздухе" */
 .carousel-slide .product-card {
@@ -1421,53 +1433,47 @@ function initCarousel(slug) {
   let current = 0;
   const slides = track.querySelectorAll('.carousel-slide');
   const total = slides.length;
+
+  // Показать первый слайд
+  slides[0]?.classList.add('active');
+
   if (total < 2) return;
 
-  // Высота wrap = высота активного слайда
-  function syncHeight() {
-    const slide = slides[current];
-    if (!slide) return;
-    // Временно показать все слайды чтобы измерить
-    wrap.style.height = slide.getBoundingClientRect().height + 'px';
-  }
-
-  // Установить начальную высоту через rAF после отрисовки
-  requestAnimationFrame(() => requestAnimationFrame(syncHeight));
-  // + через 1с после загрузки картинок
-  window.addEventListener('load', syncHeight);
-  setTimeout(syncHeight, 800);
-
-  function goTo(idx) {
+  function goTo(idx, fromRight = true) {
+    slides[current]?.classList.remove('active', 'slide-left');
     current = Math.max(0, Math.min(idx, total - 1));
-    track.style.transform = `translateX(-${current * 100}%)`;
+    const slide = slides[current];
+    slide.classList.remove('slide-left');
+    void slide.offsetWidth; // reflow
+    if (!fromRight) slide.classList.add('slide-left');
+    slide.classList.add('active');
     if (dotsEl) {
       dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => {
         d.classList.toggle('active', i === current);
       });
     }
-    setTimeout(syncHeight, 430);
   }
 
   if (dotsEl) {
     dotsEl.querySelectorAll('.carousel-dot').forEach(dot => {
-      dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index)));
+      dot.addEventListener('click', () => {
+        const idx = parseInt(dot.dataset.index);
+        goTo(idx, idx > current);
+      });
     });
   }
 
-  let startX = 0, startY = 0, isDragging = false;
+  let startX = 0, startY = 0;
   wrap.addEventListener('touchstart', e => {
     startX = e.touches[0].clientX;
     startY = e.touches[0].clientY;
-    isDragging = true;
   }, { passive: true });
 
   wrap.addEventListener('touchend', e => {
-    if (!isDragging) return;
     const dx = e.changedTouches[0].clientX - startX;
     const dy = e.changedTouches[0].clientY - startY;
-    isDragging = false;
     if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
-      goTo(dx < 0 ? current + 1 : current - 1);
+      goTo(dx < 0 ? current + 1 : current - 1, dx < 0);
     }
   }, { passive: true });
 }
