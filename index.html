@@ -949,13 +949,7 @@ footer {
       <div class="section-tag">— Каталог</div>
       <h2 class="section-title">Выберите свой десерт</h2>
     </div>
-    <div class="catalog-tabs" id="catalog-tabs-main">
-      <div class="tab-slider" id="tab-slider-main"></div>
-      <button class="tab active" data-filter="бенто">Бенто-торты</button>
-      <button class="tab" data-filter="торты">Торты</button>
-      <button class="tab" data-filter="трайфлы">Трайфлы</button>
-      <button class="tab" data-filter="капкейки">Капкейки</button>
-    </div>
+
   </div>
  
   <div class="products-grid" id="products-grid">
@@ -1106,14 +1100,11 @@ window.addEventListener('scroll', () => {
   // показываем nav когда проскроллили 40% hero — и больше не скрываем
   document.getElementById('main-nav').classList.toggle('nav-visible', y > navThreshold);
   
-  // show sticky tabs when catalog tabs scroll out of view
-  const catalogTabsEl = document.getElementById('catalog-tabs-main');
-  if (catalogTabsEl) {
-    const tabsBottom = catalogTabsEl.getBoundingClientRect().bottom;
-    const catalogSection = document.querySelector('#catalog');
-    const catalogBottom = catalogSection ? catalogSection.getBoundingClientRect().bottom : 9999;
-    const shouldShow = tabsBottom < 0 && catalogBottom > 0;
-    document.getElementById('sticky-tabs').classList.toggle('visible', shouldShow);
+  // sticky tabs показываем когда кнопки hero уходят за экран
+  const heroBtns = document.querySelector('.hero-btns');
+  if (heroBtns) {
+    const btnsBottom = heroBtns.getBoundingClientRect().bottom;
+    document.getElementById('sticky-tabs').classList.toggle('visible', btnsBottom < 56);
   }
   
   // show back to top
@@ -1156,17 +1147,16 @@ function moveSlider(tabsEl, activeTab, animate) {
 }
 
 function applyFilter(filter) {
-  ['catalog-tabs-main', 'catalog-tabs-sticky'].forEach(id => {
-    const tabsEl = document.getElementById(id);
-    if (!tabsEl) return;
+  const stickyTabs = document.getElementById('catalog-tabs-sticky');
+  if (stickyTabs) {
     let activeTab = null;
-    tabsEl.querySelectorAll('.tab').forEach(t => {
+    stickyTabs.querySelectorAll('.tab').forEach(t => {
       const isActive = t.dataset.filter === filter;
       t.classList.toggle('active', isActive);
       if (isActive) activeTab = t;
     });
-    moveSlider(tabsEl, activeTab, true);
-  });
+    moveSlider(stickyTabs, activeTab, true);
+  }
   document.querySelectorAll('.product-card, .coming-card').forEach(card => {
     card.classList.toggle('hidden', card.dataset.cat !== filter);
   });
@@ -1194,25 +1184,22 @@ document.querySelectorAll('#catalog-tabs-sticky .tab').forEach(btn => {
 });
 
 function initTabs() {
-  ['catalog-tabs-main', 'catalog-tabs-sticky'].forEach(id => {
-    const tabsEl = document.getElementById(id);
-    if (!tabsEl) return;
+  const tabsEl = document.getElementById('catalog-tabs-sticky');
+  if (tabsEl) {
     tabsEl.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => { applyFilter(tab.dataset.filter); });
+      tab.addEventListener('click', () => { scrollToCatalogAndFilter(tab.dataset.filter); });
     });
-  });
+  }
   // применяем бенто — слайдер без анимации, ждём полной отрисовки
   applyFilter('бенто');
   // дополнительно обновляем слайдеры после paint через setTimeout
   setTimeout(() => {
-    ['catalog-tabs-main', 'catalog-tabs-sticky'].forEach(id => {
-      const tabsEl = document.getElementById(id);
-      if (!tabsEl) return;
-      const activeTab = tabsEl.querySelector('.tab.active');
-      if (activeTab && activeTab.offsetWidth > 0) {
-        moveSlider(tabsEl, activeTab, false);
-      }
-    });
+    const tabsEl = document.getElementById('catalog-tabs-sticky');
+    if (!tabsEl) return;
+    const activeTab = tabsEl.querySelector('.tab.active');
+    if (activeTab && activeTab.offsetWidth > 0) {
+      moveSlider(tabsEl, activeTab, false);
+    }
   }, 50);
 }
  
