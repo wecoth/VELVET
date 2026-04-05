@@ -195,7 +195,10 @@ nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
   line-height: 1.7; max-width: 420px; margin-bottom: 36px; margin-top: 72px;
 }
 @media (max-width: 900px) {
-  .hero-desc { margin-top: 24px; margin-bottom: 24px; }
+  .hero-desc { margin-top: 0; margin-bottom: 0; text-align: center; }
+  .hero-tag { margin-bottom: 16px; }
+  .hero-title { margin-bottom: 6px; }
+  .hero-subtitle { margin-bottom: 0; }
 }
 .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 48px; }
  
@@ -792,10 +795,13 @@ footer {
  
 /* ─── RESPONSIVE ─── */
 @media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; text-align: center; padding-top: 84px; min-height: 100dvh; min-height: 100vh; padding-bottom: 40px; display: flex; flex-direction: column; justify-content: center; }
-  .hero-left { display: flex; flex-direction: column; align-items: center; }
-  .hero-btns { flex-direction: row; flex-wrap: nowrap; justify-content: center; gap: 8px; }
-  .btn-primary, .btn-outline { width: auto; padding: 14px 24px; font-size: .85rem; min-width: 160px; justify-content: center; }
+  .hero { grid-template-columns: 1fr; text-align: center; padding: 0 6% 0; min-height: 100dvh; min-height: 100vh; display: flex; flex-direction: column; }
+  .hero-left { display: flex; flex-direction: column; align-items: center; flex: 1; padding-top: 72px; padding-bottom: 44px; }
+  .hero-top { display: flex; flex-direction: column; align-items: center; }
+  .hero-middle { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .hero-bottom { display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .hero-btns { flex-direction: column; width: 100%; gap: 10px; margin-bottom: 0; }
+  .btn-primary, .btn-outline { width: 100%; padding: 16px 24px; font-size: .95rem; justify-content: center; }
   .hero-cats { flex-wrap: nowrap; justify-content: center; gap: 8px; }
   .hero-cat { padding: 6px 12px; font-size: .75rem; }
   .hero-right { display: none !important; height: 0; overflow: hidden; }
@@ -897,16 +903,22 @@ footer {
 <section class="hero">
   <div class="hero-floats" id="hero-floats"></div>
   <div class="hero-left reveal">
-    <div class="hero-tag">✦ Авторская кондитерская</div>
-    <h1 class="hero-title">Velvet</h1>
-    <p class="hero-subtitle">Торты, которые остаются в памяти</p>
-    <p class="hero-desc">Авторские десерты ручной работы в Краснодаре. Бенто, трайфлы, капкейки и торты на любой повод - с любовью к каждой детали.</p>
+    <div class="hero-top">
+      <div class="hero-tag">✦ Авторская кондитерская</div>
+      <h1 class="hero-title">Velvet</h1>
+      <p class="hero-subtitle">Торты, которые остаются в памяти</p>
+    </div>
+    <div class="hero-middle">
+      <p class="hero-desc">Авторские десерты ручной работы в Краснодаре. Бенто, трайфлы, капкейки и торты на любой повод — с любовью к каждой детали.</p>
+    </div>
+    <div class="hero-bottom">
     <div class="hero-btns">
       <a href="https://t.me/DianaOmelyanenko?text=Привет!%20Интересует%20заказ%20десерта%2C%20можете%20рассказать%20подробнее%3F" class="btn-primary" target="_blank">
         <span>Заказать</span> <span>→</span>
       </a>
       <a href="#catalog" class="btn-outline" onclick="event.preventDefault();scrollToCatalogAndFilter('бенто')">Смотреть каталог</a>
     </div>
+    </div><!-- /hero-bottom -->
   </div>
   <div class="hero-right">
     <div class="hero-img-wrap">
