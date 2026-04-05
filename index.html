@@ -60,8 +60,16 @@ nav {
   background: rgba(255,255,255,0.88);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(196,133,90,0.12);
-  transition: box-shadow .3s;
+  transition: box-shadow .3s, opacity .3s, transform .3s;
   will-change: transform;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+}
+nav.nav-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
 
@@ -1044,6 +1052,13 @@ footer {
 window.addEventListener('scroll', () => {
   const y = window.scrollY;
   document.getElementById('main-nav').classList.toggle('scrolled', y > 40);
+
+  // show nav only when hero title scrolls out of view
+  const heroTitle = document.querySelector('.hero-title');
+  if (heroTitle) {
+    const titleBottom = heroTitle.getBoundingClientRect().bottom;
+    document.getElementById('main-nav').classList.toggle('nav-visible', titleBottom < 56);
+  }
   
   // show sticky tabs when catalog tabs scroll out of view
   const catalogTabs = document.querySelector('.catalog-tabs');
