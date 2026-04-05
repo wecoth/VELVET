@@ -373,14 +373,13 @@ section { padding: 50px 5%; }
 .carousel-track-wrap {
   overflow: hidden;
   position: relative;
-  /* высота = карточка + отступ снизу */
 }
 .carousel-track {
   display: flex;
   transition: transform 0.42s cubic-bezier(.4,0,.2,1);
   will-change: transform;
   touch-action: pan-y pinch-zoom;
-  align-items: stretch;
+  align-items: flex-start;
 }
 .carousel-slide {
   flex: 0 0 100%;
@@ -1422,20 +1421,21 @@ function initCarousel(slug) {
   let current = 0;
   const slides = track.querySelectorAll('.carousel-slide');
   const total = slides.length;
-
-  // Явно задаём высоту wrap = высота первого слайда
-  function fixHeight() {
-    const h = slides[0] ? slides[0].offsetHeight : 0;
-    if (h > 0) wrap.style.height = h + 'px';
-  }
-  fixHeight();
-  // Повторно после загрузки картинок
-  window.addEventListener('load', fixHeight);
-  // Повторно через 500ms на случай медленных изображений
-  setTimeout(fixHeight, 500);
-  setTimeout(fixHeight, 1500);
-
   if (total < 2) return;
+
+  // Высота wrap = высота активного слайда
+  function syncHeight() {
+    const slide = slides[current];
+    if (!slide) return;
+    // Временно показать все слайды чтобы измерить
+    wrap.style.height = slide.getBoundingClientRect().height + 'px';
+  }
+
+  // Установить начальную высоту через rAF после отрисовки
+  requestAnimationFrame(() => requestAnimationFrame(syncHeight));
+  // + через 1с после загрузки картинок
+  window.addEventListener('load', syncHeight);
+  setTimeout(syncHeight, 800);
 
   function goTo(idx) {
     current = Math.max(0, Math.min(idx, total - 1));
@@ -1445,21 +1445,15 @@ function initCarousel(slug) {
         d.classList.toggle('active', i === current);
       });
     }
-    // пересчитать высоту под текущий слайд
-    setTimeout(() => {
-      const h = slides[current] ? slides[current].offsetHeight : 0;
-      if (h > 0) wrap.style.height = h + 'px';
-    }, 420);
+    setTimeout(syncHeight, 430);
   }
 
-  // Dots click
   if (dotsEl) {
     dotsEl.querySelectorAll('.carousel-dot').forEach(dot => {
       dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index)));
     });
   }
 
-  // Touch swipe
   let startX = 0, startY = 0, isDragging = false;
   wrap.addEventListener('touchstart', e => {
     startX = e.touches[0].clientX;
@@ -1516,8 +1510,22 @@ async function loadMenu() {
     observeReveal();
 
   } catch(e) {
-    if (loading) loading.innerHTML = 'Не удалось загрузить меню. Попробуйте обновить страницу.';
     console.error('Menu load error:', e);
+    // Показать заглушку с одной карточкой чтобы проверить что рендер работает
+    if (loading) loading.style.display = 'none';
+    const testItems = [{
+      id_категории: 'кат_001',
+      название: 'Тестовая карточка',
+      описание: 'Данные загружаются... Проверьте подключение к n8n',
+      начинки: ['Клубника', 'Малина'],
+      цена: '1500',
+      фото: null,
+      сладость: 3,
+      размеры: []
+    }];
+    container.innerHTML = buildCarousel('кат_001', testItems);
+    initCarousel('бенто');
+    initTabs();
   }
 }
 
