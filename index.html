@@ -1092,38 +1092,41 @@ function order(product) {
 }
  
 // ─── CATALOG TABS ───
-function syncStickyTabs(filter) {
-  document.querySelectorAll('#sticky-tabs .tab').forEach(t => {
+function applyFilter(filter) {
+  // sync all tabs (main + sticky)
+  document.querySelectorAll('.tab').forEach(t => {
     t.classList.toggle('active', t.dataset.filter === filter);
   });
+  // show/hide cards
+  document.querySelectorAll('.product-card, .coming-card').forEach(card => {
+    if (filter === 'all') card.classList.remove('hidden');
+    else card.classList.toggle('hidden', card.dataset.cat !== filter);
+  });
+  // show/hide dividers
+  document.querySelectorAll('.cat-divider').forEach(div => {
+    div.classList.toggle('visible', filter === 'all');
+  });
+}
+
+function scrollToCatalogAndFilter(filter) {
+  const catalog = document.querySelector('#catalog');
+  if (!catalog) return;
+  // apply filter first
+  applyFilter(filter);
+  // then scroll smoothly to catalog
+  catalog.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 document.querySelectorAll('#sticky-tabs .tab').forEach(btn => {
   btn.addEventListener('click', () => {
-    const filter = btn.dataset.filter;
-    // click the main tab
-    const mainTab = document.querySelector(`.catalog-tabs .tab[data-filter="${filter}"]`);
-    if (mainTab) mainTab.click();
-    syncStickyTabs(filter);
-    // scroll to catalog section
-    document.querySelector('#catalog').scrollIntoView({behavior: 'smooth'});
+    scrollToCatalogAndFilter(btn.dataset.filter);
   });
 });
 
 function initTabs() {
-  document.querySelectorAll('.tab').forEach(tab => {
+  document.querySelectorAll('.catalog-tabs .tab').forEach(tab => {
     tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      const filter = tab.dataset.filter;
-      document.querySelectorAll('.product-card, .coming-card').forEach(card => {
-        if (filter === 'all') card.classList.remove('hidden');
-        else card.classList.toggle('hidden', card.dataset.cat !== filter);
-      });
-      syncStickyTabs(filter);
-      document.querySelectorAll('.cat-divider').forEach(div => {
-        div.classList.toggle('visible', filter === 'all');
-      });
+      applyFilter(tab.dataset.filter);
     });
   });
 }
@@ -1132,11 +1135,7 @@ function initTabs() {
 document.querySelectorAll('.hero-cat').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
-    document.querySelector('#catalog').scrollIntoView({behavior:'smooth'});
-    setTimeout(() => {
-      const tab = document.querySelector(`.tab[data-filter="${link.dataset.cat}"]`);
-      if (tab) tab.click();
-    }, 600);
+    scrollToCatalogAndFilter(link.dataset.cat);
   });
 });
  
