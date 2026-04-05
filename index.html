@@ -44,6 +44,10 @@ body {
   background: var(--white);
   color: var(--text);
   overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
+html {
+  overscroll-behavior-y: none;
 }
  
 /* ─── GRADIENT BG ─── */
@@ -82,8 +86,9 @@ nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
   border-bottom: none;
   padding: 8px 5%;
 }
-.sticky-tabs.visible { display: flex; justify-content: center; }
-.sticky-tabs .catalog-tabs { width: auto; }
+.sticky-tabs.visible { display: flex; justify-content: center; padding: 8px 4%; }
+.sticky-tabs .catalog-tabs { width: 100%; max-width: 480px; display: flex; }
+.sticky-tabs .tab { flex: 1; text-align: center; }
 
 /* ─── BACK TO TOP ─── */
 .back-to-top {
@@ -326,10 +331,10 @@ section { padding: 50px 5%; }
   left: 0;
 }
 .tab {
-  padding: 9px 20px; border-radius: 50px;
+  padding: 8px clamp(10px, 3vw, 20px); border-radius: 50px;
   border: none;
   background: transparent; color: var(--text-mid);
-  font-size: .82rem; font-weight: 600;
+  font-size: clamp(.72rem, 2.5vw, .82rem); font-weight: 600;
   cursor: pointer; transition: color .2s; font-family: 'Nunito', sans-serif;
   position: relative; z-index: 1;
   white-space: nowrap; flex-shrink: 0;
@@ -558,7 +563,8 @@ section { padding: 50px 5%; }
   transform: rotateY(180deg);
   background: var(--white);
   padding: 22px;
-  overflow-y: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 .card-back-title {
   font-family: 'Cormorant Garamond', serif;
@@ -1399,10 +1405,7 @@ async function loadMenu() {
  
 loadMenu();
 
-// ─── PREVENT ZOOM (pinch only, don't block scroll) ───
-document.addEventListener('gesturestart', e => e.preventDefault(), { passive: false });
-document.addEventListener('gesturechange', e => e.preventDefault(), { passive: false });
-// НЕ блокируем touchmove глобально — это ломает скролл на iOS
+// zoom отключён через viewport meta, gesture handlers убраны чтобы не блокировать скролл
 
 // ─── FALLING EMOJIS ───
 (function() {
