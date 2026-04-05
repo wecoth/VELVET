@@ -1489,6 +1489,12 @@ async function loadMenu() {
       ? (data[0]?.товары || [])
       : (data.товары || []);
 
+    // DEBUG — логируем первый товар
+    if (товары.length > 0) {
+      console.log('Первый товар:', JSON.stringify(товары[0], null, 2));
+      console.log('Всего товаров:', товары.length);
+    }
+
     let html = '';
     CAT_ORDER.forEach(catId => {
       const items = товары.filter(t => t.id_категории === catId);
