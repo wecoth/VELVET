@@ -1318,8 +1318,13 @@ function flipCard(btn) {
 
 // ─── ORDER ───
 function order(product) {
-  const msg = encodeURIComponent(`Привет! Хочу заказать: ${product}`);
-  window.open(`https://t.me/DianaOmelyanenko?text=${msg}`, '_blank');
+  const text = 'Привет! Хочу заказать: ' + product;
+  const url = 'https://t.me/DianaOmelyanenko?text=' + encodeURIComponent(text);
+  if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openTelegramLink) {
+    window.Telegram.WebApp.openTelegramLink(url);
+  } else {
+    window.open(url, '_blank');
+  }
 }
 
 // ─── SWIPER (translateX, все listeners passive, вертикальный скролл свободен) ───
