@@ -1102,6 +1102,18 @@ body.is-tg .hero-top { margin-top: 20px; }
   .swiper-dots { display: none; }
   .swiper-arrow { display: none !important; }
   .cat-nav { display: none !important; }
+
+  /* убираем правый блок hero, центрируем контент */
+  .hero {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+  .hero-right { display: none !important; }
+  .hero-left { display: flex; flex-direction: column; align-items: center; max-width: 640px; }
+  .hero-desc { text-align: center; margin: 0 auto 36px; }
+  .hero-btns { justify-content: center; }
+  .hero-cats { justify-content: center; }
 }
 </style>
 </head>
