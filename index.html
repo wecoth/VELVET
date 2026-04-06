@@ -343,7 +343,9 @@ section { padding: 50px 5%; }
   perspective: 1000px;
 }
 
-.product-card.hidden { display: none; }.cat-nav {
+.product-card.hidden { display: none; }
+
+.cat-nav {
   display: none;
   position: fixed; top: 56px; left: 0; right: 0; z-index: 99;
   background: rgba(255,255,255,0.97);
@@ -394,12 +396,6 @@ section { padding: 50px 5%; }
 }
 .cat-nav-btn.active { color: #fff; }
 .cat-nav-btn:not(.active):hover { color: var(--choco); }
-
-/* ─── CATALOG SECTIONS ─── */
-.catalog-section {
-  margin-bottom: 48px;
-}
-.catalog-section:last-child { margin-bottom: 0; }
 
 /* ─── SWIPER DOTS ─── */
 .swiper-dots {
@@ -876,7 +872,7 @@ footer {
  
 /* ─── RESPONSIVE ─── */
 @media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; text-align: center; padding: 0 6%; min-height: 100dvh; min-height: 100vh; display: flex; flex-direction: column; }
+  .hero { grid-template-columns: 1fr; text-align: center; padding: 0 6%; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
   .hero-left { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; padding-top: 76px; padding-bottom: 44px; }
   .hero-top { display: flex; flex-direction: column; align-items: center; margin-top: -40px; }
   .hero-middle { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 40px; }
@@ -1162,7 +1158,9 @@ function calcNavThreshold() {
   const hero = document.querySelector('.hero');
   if (hero) navThreshold = hero.offsetTop + hero.offsetHeight * 0.4;
 }
+calcNavThreshold();
 window.addEventListener('load', calcNavThreshold);
+window.addEventListener('resize', calcNavThreshold, { passive: true });
 
 // ─── GENERAL SECTION SCROLL (для nav-ссылок) ───
 function scrollToSection(id) {
@@ -1211,14 +1209,16 @@ window.addEventListener('scroll', () => {
   _scrollTicking = true;
   requestAnimationFrame(() => {
     const y = window.scrollY;
-    document.getElementById('main-nav').classList.toggle('scrolled', y > 40);
-    document.getElementById('main-nav').classList.toggle('nav-visible', y > navThreshold);
+    const mainNavEl = document.getElementById('main-nav');
+    const navVisible = y > navThreshold;
+    mainNavEl.classList.toggle('scrolled', y > 40);
+    mainNavEl.classList.toggle('nav-visible', navVisible);
 
-    // cat-nav показываем когда каталог вошёл в поле зрения
+    // cat-nav показываем только когда main-nav уже виден И каталог в зоне видимости
     const catalog = document.getElementById('catalog');
     if (catalog) {
       const catTop = catalog.getBoundingClientRect().top;
-      document.getElementById('cat-nav').classList.toggle('visible', catTop < 56);
+      document.getElementById('cat-nav').classList.toggle('visible', navVisible && catTop < 56);
     }
 
     // back to top
@@ -1361,6 +1361,17 @@ const CAT_NAMES = {
   'кат_003':'Трайфлы','кат_006':'Капкейки',
 };
 
+// ─── HTML escape helpers (защита от поломки разметки и XSS) ───
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function renderHearts(сладость) {
   if (!сладость) return '';
   const full = Math.floor(сладость);
@@ -1387,7 +1398,7 @@ function renderSizes(варианты) {
     <tr>
       <td>${вес}</td>
       <td>${в.порции ? в.порции + ' порц.' : '—'}</td>
-      <td class="sizes-price">${в.цена ? Number(в.цена).toLocaleString('ru') + ' ₽' : '—'}</td>
+      <td class="sizes-price">${в.цена ? Number(в.цена).toLocaleString('ru-RU') + ' ₽' : '—'}</td>
     </tr>`;
   }).join('');
   return `
@@ -1404,9 +1415,10 @@ function renderCard(т) {
   const slug = CAT_SLUG[т.id_категории] || 'other';
   const emoji = EMOJI[т.id_категории] || '🍰';
   const bg = BG[т.id_категории] || BG['кат_002'];
-  const fillingTags = (т.начинки || []).map(n => `<span class="filling-tag">${n}</span>`).join('');
-  const цена = т.цена ? `от ${т.цена} ₽` : 'Уточнить';
-  const название = (т.название || '').replace(/'/g, "\\'");
+  const fillingTags = (т.начинки || []).map(n => `<span class="filling-tag">${escapeHtml(n)}</span>`).join('');
+  const цена = т.цена ? `от ${escapeHtml(т.цена)} ₽` : 'Уточнить';
+  const названиеRaw = т.название || '';
+  const названиеHtml = escapeHtml(названиеRaw);
   const варианты = (т.размеры || т.варианты || []).filter(в => в.вес && в.цена);
   const showMinOrder = т.минимальный_заказ && parseInt(т.минимальный_заказ) > 1;
 
@@ -1416,13 +1428,13 @@ function renderCard(т) {
       <div class="card-front">
        <div class="card-img" style="background:${bg}">
  ${т.фото
-  ? `<img src="${т.фото}" alt="${т.название}" class="card-photo" loading="lazy" decoding="async">`
+  ? `<img src="${escapeHtml(т.фото)}" alt="${названиеHtml}" class="card-photo" loading="lazy" decoding="async">`
   : `<div class="card-emoji">${emoji}</div>`
 }
 </div>
         <div class="card-body">
-          <div class="card-name">${т.название || ''}</div>
-          <div class="card-desc">${т.описание || ''}</div>
+          <div class="card-name">${названиеHtml}</div>
+          <div class="card-desc">${escapeHtml(т.описание || '')}</div>
           <div class="card-bottom">
             ${fillingTags ? `<div class="card-fillings-label">Начинки</div>` : ''}
             <div class="card-fillings">${fillingTags}</div>
@@ -1430,19 +1442,19 @@ function renderCard(т) {
               <div class="card-price">${цена}</div>
             </div>
             <div class="card-actions">
-              <button class="card-detail-btn" onclick="flipCard(this)">Подробнее ›</button>
-              <button class="card-btn" onclick="order('${название}')">Заказать</button>
+              <button class="card-detail-btn" type="button">Подробнее ›</button>
+              <button class="card-btn js-order-btn" type="button" data-name="${названиеHtml}">Заказать</button>
             </div>
           </div>
         </div>
       </div>
       <div class="card-back">
-        <div class="card-back-title">${т.название || ''}</div>
+        <div class="card-back-title">${названиеHtml}</div>
 
-        ${т.состав ? `<div class="card-back-row"><div class="card-back-label">Состав</div><div class="card-back-value">${т.состав}</div></div>` : ''}
-        ${т.аллергены ? `<div class="card-back-row"><div class="card-back-label">Аллергены</div><div class="card-back-value">${т.аллергены}</div></div>` : ''}
-        ${(т.кастомизация || т.можно_поменять) ? `<div class="card-back-row"><div class="card-back-label">Можно изменить</div><div class="card-back-value">${т.кастомизация || т.можно_поменять}</div></div>` : ''}
-        ${showMinOrder ? `<div class="card-back-row"><div class="card-back-label">Минимальный заказ</div><div class="card-back-value">${т.минимальный_заказ}</div></div>` : ''}
+        ${т.состав ? `<div class="card-back-row"><div class="card-back-label">Состав</div><div class="card-back-value">${escapeHtml(т.состав)}</div></div>` : ''}
+        ${т.аллергены ? `<div class="card-back-row"><div class="card-back-label">Аллергены</div><div class="card-back-value">${escapeHtml(т.аллергены)}</div></div>` : ''}
+        ${(т.кастомизация || т.можно_поменять) ? `<div class="card-back-row"><div class="card-back-label">Можно изменить</div><div class="card-back-value">${escapeHtml(т.кастомизация || т.можно_поменять)}</div></div>` : ''}
+        ${showMinOrder ? `<div class="card-back-row"><div class="card-back-label">Минимальный заказ</div><div class="card-back-value">${escapeHtml(т.минимальный_заказ)}</div></div>` : ''}
 
         ${т.сладость ? `
         <div class="card-back-sweet">
@@ -1453,8 +1465,8 @@ function renderCard(т) {
         ${renderSizes(варианты)}
 
         <div class="card-back-btns">
-          <button class="card-flip-back" onclick="flipCard(this)">← Назад</button>
-          <button class="card-btn" onclick="order('${название}')">Заказать</button>
+          <button class="card-flip-back" type="button">← Назад</button>
+          <button class="card-btn js-order-btn" type="button" data-name="${названиеHtml}">Заказать</button>
         </div>
       </div>
     </div>
@@ -1502,14 +1514,22 @@ async function loadMenu() {
     if (!html) throw new Error('No items');
     container.innerHTML = html;
 
+    // делегирование кликов: flip и order
+    container.addEventListener('click', e => {
+      const orderBtn = e.target.closest('.js-order-btn');
+      if (orderBtn) { order(orderBtn.dataset.name || ''); return; }
+      const flipBtn = e.target.closest('.card-detail-btn, .card-flip-back');
+      if (flipBtn) { flipCard(flipBtn); return; }
+    });
+
     // инициализируем свайперы
     container.querySelectorAll('.catalog-section').forEach(sec => initSwiper(sec));
 
     // scroll reveal
     observeReveal();
 
-    // инициализируем cat-nav slider
-    setTimeout(() => updateCatNavSlider('бенто'), 50);
+    // инициализируем cat-nav slider после того как layout посчитан
+    requestAnimationFrame(() => updateCatNavSlider('бенто'));
 
   } catch(e) {
     container.innerHTML = `<div style="text-align:center;padding:60px;color:var(--text-light)">
@@ -1526,14 +1546,6 @@ document.getElementById('cat-nav-inner').addEventListener('click', e => {
   const btn = e.target.closest('.cat-nav-btn');
   if (!btn) return;
   scrollToCatalogSection(btn.dataset.section);
-});
-
-// Hero cat links
-document.querySelectorAll('.hero-cat').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    scrollToCatalogSection(link.dataset.cat);
-  });
 });
 
 // ─── SCROLL REVEAL ───
