@@ -10,6 +10,18 @@
     const tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
+    // настоящий фуллскрин (Bot API 8.0+) — прячет системный хедер Telegram
+    try {
+      if (typeof tg.requestFullscreen === 'function') {
+        tg.requestFullscreen();
+      }
+    } catch (e) { /* старый клиент — просто остаёмся в expand */ }
+    // отключаем вертикальные свайпы которые могут свернуть Mini App
+    try {
+      if (typeof tg.disableVerticalSwipes === 'function') {
+        tg.disableVerticalSwipes();
+      }
+    } catch (e) {}
   }
 </script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -423,27 +435,45 @@ section { padding: 50px 5%; }
   border-radius: 4px;
 }
 
-/* ─── SWIPER ARROWS (только десктоп) ─── */
+/* ─── SWIPER ARROWS — минималистичные круглые кнопки поверх картинки карточки ─── */
 .swiper-arrow {
-  display: none;
+  display: flex;
   position: absolute;
-  top: 50%; transform: translateY(-50%);
+  /* центр картинки карточки: padding-top swiper-wrap (8px) + половина высоты картинки
+     картинка = ширина карточки × 0.85; ширина карточки ≈ 90vw − 24px → высота ≈ 0.85×(90vw−24px) */
+  top: calc(8px + 0.425 * (90vw - 24px));
+  transform: translateY(-50%);
   z-index: 10;
-  width: 36px; height: 36px;
+  width: 40px; height: 40px;
   border-radius: 50%;
-  border: 1.5px solid rgba(62,26,12,0.2);
+  border: none;
   background: rgba(255,255,255,0.95);
   color: var(--choco);
-  font-size: 1rem;
   cursor: pointer;
   align-items: center; justify-content: center;
-  transition: all .2s;
-  box-shadow: 0 2px 12px rgba(62,26,12,0.12);
+  transition: opacity .2s, transform .15s, background .2s;
+  box-shadow: 0 3px 14px rgba(62,26,12,0.18);
+  padding: 0;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
 }
-.swiper-arrow:hover { background: var(--choco); color: #fff; }
-.swiper-arrow.prev { left: 0; }
-.swiper-arrow.next { right: 0; }
-@media (min-width: 700px) { .swiper-arrow { display: flex; } }
+.swiper-arrow:hover { background: #fff; }
+.swiper-arrow:active { transform: translateY(-50%) scale(0.92); }
+.swiper-arrow.prev { left: calc(5% + 10px); }
+.swiper-arrow.next { right: calc(5% + 10px); }
+.swiper-arrow.disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+/* backdrop-filter только на десктопе (на мобиле роняет GPU) */
+@media (min-width: 901px) {
+  .swiper-arrow {
+    top: 42.5%;
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
 
 
 
@@ -1309,8 +1339,8 @@ function initSwiper(sectionEl) {
     current = idx;
     track.style.transform = `translateX(-${idx * slideWidth()}px)`;
     dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-    if (prevBtn) prevBtn.style.opacity = idx === 0 ? '0.3' : '1';
-    if (nextBtn) nextBtn.style.opacity = idx === total - 1 ? '0.3' : '1';
+    if (prevBtn) prevBtn.classList.toggle('disabled', idx === 0);
+    if (nextBtn) nextBtn.classList.toggle('disabled', idx === total - 1);
   }
 
   // регистрируем в глобальном списке
@@ -1540,8 +1570,12 @@ function renderSection(catId, items) {
     <h3 class="cat-section-title" id="cat-section-${slug}">${name}</h3>
     <div class="swiper-wrap">
       <div class="swiper-track">${cardsHtml}</div>
-      <button class="swiper-arrow prev" aria-label="Предыдущий">‹</button>
-      <button class="swiper-arrow next" aria-label="Следующий">›</button>
+      <button class="swiper-arrow prev" type="button" aria-label="Предыдущий">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <button class="swiper-arrow next" type="button" aria-label="Следующий">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
     </div>
     ${total > 1 ? `<div class="swiper-dots">${dotsHtml}</div>` : ''}
   </div>`;
@@ -1652,13 +1686,15 @@ observeReveal();
 
     const size = 1.2 + Math.random() * 0.8;
     const duration = 12 + Math.random() * 6;
-    // blur отключён — убивает GPU в Telegram WebView на слабых устройствах
-    const opacity = 0.6 + Math.random() * 0.3;
+    const isSharp = ['🍰','🧁','🎂','🍫','🍪'].includes(emoji);
+    const blur = isSharp ? 0 : (3 + Math.random() * 4);
+    const opacity = isSharp ? 0.8 : 0.25 + Math.random() * 0.2;
 
     el.style.cssText = `
       left: ${left}%;
       top: -60px;
       font-size: ${size}rem;
+      filter: blur(${blur}px);
       opacity: ${opacity};
       animation-duration: ${duration}s;
       animation-delay: 0s;
