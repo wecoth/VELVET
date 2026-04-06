@@ -288,14 +288,20 @@ section { padding: 50px 5%; }
 }
  
 /* ─── CATALOG ─── */
-#catalog { background: var(--pink-1); padding-bottom: 60px; }
-.catalog-head {
+#catalog { background: var(--beige); padding-bottom: 60px; }
+.catalog-section {
+  margin-bottom: 48px;
+  background: var(--beige);
+  border-radius: 20px;
+  padding: 20px 16px 20px;
+}
+.catalog-section:last-child { margin-bottom: 0; }.catalog-head {
   display: flex; flex-direction: column;
   align-items: flex-start; gap: 20px;
-  margin-bottom: 36px;
+  margin-bottom: 28px;
 }
 
-/* ─── CATEGORY NAV (sticky, появляется после hero) ─── */
+
 .cat-nav {
   display: none;
   position: fixed; top: 56px; left: 0; right: 0; z-index: 99;
@@ -366,58 +372,53 @@ section { padding: 50px 5%; }
 /* ─── HORIZONTAL SWIPER ─── */
 .swiper-wrap {
   position: relative;
-  overflow: hidden;
-  border-radius: var(--radius);
+  /* overflow: hidden убран — карточки не должны обрезаться */
+  /* вместо этого используем overflow на track */
 }
 
-/* Карточки лежат абсолютно, показываем только активную */
 .swiper-track {
   position: relative;
   width: 100%;
-  /* высота растягивается по самой высокой карточке */
+  overflow: hidden;
+  border-radius: var(--radius);
+  /* высота задаётся JS по активной карточке */
 }
 
-/* все карточки стакуются друг на друга */
+/* все карточки: абсолютные, невидимы */
 .product-card {
   position: absolute;
   top: 0; left: 0;
   width: 100%;
   opacity: 0;
   pointer-events: none;
-  /* анимация slide: задаётся через data-state */
   transition: transform 0.42s cubic-bezier(.4,0,.2,1), opacity 0.3s ease;
   transform: translateX(100%);
   will-change: transform, opacity;
+
+  /* внешний вид */
+  background: var(--white);
+  border-radius: var(--radius);
+  /* overflow: hidden убран — контент должен влезать, не обрезаться */
+  box-shadow: 0 4px 24px rgba(62,26,12,0.10);
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  perspective: 1000px;
 }
-/* активная карточка — на месте, видна */
+
+/* активная карточка — relative (задаёт высоту трека) */
 .product-card.swiper-active {
   opacity: 1;
   pointer-events: auto;
   transform: translateX(0);
-  position: relative; /* участвует в потоке для высоты трека */
+  position: relative;
 }
-/* уходит влево */
-.product-card.swiper-exit-left {
-  opacity: 0;
-  transform: translateX(-60px);
-}
-/* уходит вправо */
-.product-card.swiper-exit-right {
-  opacity: 0;
-  transform: translateX(60px);
-}
-/* входит слева */
-.product-card.swiper-enter-left {
-  transform: translateX(-60px);
-  opacity: 0;
-}
-/* входит справа */
-.product-card.swiper-enter-right {
-  transform: translateX(60px);
-  opacity: 0;
-}
-
-/* ─── SWIPER DOTS ─── */
+.product-card.swiper-exit-left  { opacity: 0; transform: translateX(-60px); }
+.product-card.swiper-exit-right { opacity: 0; transform: translateX(60px); }
+.product-card.swiper-enter-left  { transform: translateX(-60px); opacity: 0; }
+.product-card.swiper-enter-right { transform: translateX(60px);  opacity: 0; }
+.product-card.hidden { display: none; }
 .swiper-dots {
   display: flex;
   justify-content: center;
@@ -464,28 +465,12 @@ section { padding: 50px 5%; }
 .swiper-arrow.next { right: -16px; }
 @media (min-width: 600px) { .swiper-arrow { display: flex; } }
 
-/* product-card base — dimensions and appearance only (position/opacity/transform handled by swiper) */
-.product-card {
-  background: var(--white);
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  cursor: default;
-  display: flex;
-  flex-direction: column;
-  min-height: 560px;
-  perspective: 1000px;
-  box-sizing: border-box;
-}
-@media (max-width: 600px) {
-  .product-card { min-height: 580px; }
-}
-.product-card.hidden { display: none; }
- 
+
+
 .card-img {
   width: 100%;
   height: 0 !important;
-  padding-top: 100% !important; /* 1:1 */
+  padding-top: 75% !important; /* 4:3 — компактнее чем квадрат */
   position: relative;
   overflow: hidden;
   border-radius: 0;
@@ -645,25 +630,39 @@ section { padding: 50px 5%; }
 /* ─── FLIP CARD ─── */
 .card-inner {
   position: relative;
-  width: 100%; height: 100%;
+  width: 100%;
   transition: transform 0.55s cubic-bezier(.4,0,.2,1);
   transform-style: preserve-3d;
-  flex: 1; display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 .product-card.flipped .card-inner { transform: rotateY(180deg); }
-.card-front, .card-back {
-  position: absolute; inset: 0;
+
+/* front — в потоке, задаёт высоту карточки */
+.card-front {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow: hidden; /* только чтобы скруглить углы фото */
+  flex: 1;
 }
+
+/* back — абсолютная поверх front, та же высота */
 .card-back {
+  position: absolute;
+  inset: 0;
   transform: rotateY(180deg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   background: var(--white);
+  border-radius: var(--radius);
   padding: 22px;
-  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 .card-back-title {
