@@ -1534,7 +1534,7 @@ function renderCard(т) {
             </div>
             <div class="card-actions">
               <button class="card-detail-btn" type="button">Подробнее ›</button>
-              <button class="card-btn js-order-btn" type="button" data-name="${названиеHtml}">Заказать</button>
+              <button class="card-btn js-order-btn" type="button" data-name="${названиеRaw.replace(/"/g, '&quot;')}">Заказать</button>
             </div>
           </div>
         </div>
@@ -1562,7 +1562,7 @@ function renderCard(т) {
 
         <div class="card-back-btns">
           <button class="card-flip-back" type="button">← Назад</button>
-          <button class="card-btn js-order-btn" type="button" data-name="${названиеHtml}">Заказать</button>
+          <button class="card-btn js-order-btn" type="button" data-name="${названиеRaw.replace(/"/g, '&quot;')}">Заказать</button>
         </div>
       </div>
     </div>
