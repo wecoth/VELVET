@@ -41,6 +41,7 @@ body {
   background: var(--white);
   color: var(--text);
   overflow-x: hidden;
+  touch-action: pan-y; /* явно разрешаем вертикальный скролл */
 }
  
 /* ─── GRADIENT BG ─── */
@@ -319,6 +320,7 @@ section { padding: 50px 5%; }
   overflow: hidden; /* clip соседних карточек */
   padding: 8px 5% 16px;
   box-sizing: border-box;
+  touch-action: pan-y; /* вертикальный скролл — браузеру, горизонт — JS */
 }
 
 .swiper-track {
@@ -326,10 +328,11 @@ section { padding: 50px 5%; }
   gap: 12px;
   /* никакого overflow-x scroll — двигаем через translateX в JS */
   transition: transform 0.38s cubic-bezier(.4,0,.2,1);
+  touch-action: pan-y; /* вертикальный скролл — браузеру, горизонт — JS */
 }
 
 .product-card {
-  flex: 0 0 calc(100vw - 10% - 24px);
+  flex: 0 0 calc(100vw - 10vw - 24px); /* 100vw минус padding swiper-wrap (5%+5%) и gap */
   min-width: 0;
 
   background: var(--white);
@@ -647,6 +650,7 @@ section { padding: 50px 5%; }
   flex-direction: column;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
 }
 .card-back-title {
   font-family: 'Cormorant Garamond', serif;
