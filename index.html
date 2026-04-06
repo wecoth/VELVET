@@ -369,56 +369,62 @@ section { padding: 50px 5%; }
   scroll-margin-top: 120px;
 }
 
-/* ─── HORIZONTAL SWIPER ─── */
+/* ─── HORIZONTAL SWIPER — нативный scroll-snap ─── */
 .swiper-wrap {
   position: relative;
-  /* overflow: hidden убран — карточки не должны обрезаться */
-  /* вместо этого используем overflow на track */
+  /* боковые padding создают видимость соседних карточек */
+  padding: 0 28px;
+  margin: 0 -16px; /* компенсируем padding секции чтобы выйти за край */
+  box-sizing: border-box;
 }
 
 .swiper-track {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  border-radius: var(--radius);
-  /* высота задаётся JS по активной карточке */
+  display: flex;
+  gap: 12px;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  /* убираем overscroll чтобы не тригерить page refresh */
+  overscroll-behavior-x: contain;
+  /* padding по бокам показывает кусочки соседних карточек */
+  padding: 8px 0 12px 0;
+  scroll-padding-left: 0;
 }
+.swiper-track::-webkit-scrollbar { display: none; }
 
-/* все карточки: абсолютные, невидимы */
 .product-card {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.42s cubic-bezier(.4,0,.2,1), opacity 0.3s ease;
-  transform: translateX(100%);
-  will-change: transform, opacity;
+  /* каждая карточка занимает всю видимую зону (wrap минус padding) */
+  flex: 0 0 calc(100% - 0px);
+  min-width: 0;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
 
   /* внешний вид */
   background: var(--white);
   border-radius: var(--radius);
-  /* overflow: hidden убран — контент должен влезать, не обрезаться */
-  box-shadow: 0 4px 24px rgba(62,26,12,0.10);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(62,26,12,0.10);
   cursor: default;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   perspective: 1000px;
+
+  /* плавный масштаб неактивных карточек */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform: scale(0.96);
 }
 
-/* активная карточка — relative (задаёт высоту трека) */
-.product-card.swiper-active {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(0);
-  position: relative;
+/* активная (центральная) карточка чуть крупнее */
+.product-card.snap-active {
+  transform: scale(1);
+  box-shadow: 0 8px 32px rgba(62,26,12,0.16);
 }
-.product-card.swiper-exit-left  { opacity: 0; transform: translateX(-60px); }
-.product-card.swiper-exit-right { opacity: 0; transform: translateX(60px); }
-.product-card.swiper-enter-left  { transform: translateX(-60px); opacity: 0; }
-.product-card.swiper-enter-right { transform: translateX(60px);  opacity: 0; }
+
 .product-card.hidden { display: none; }
+
+/* ─── SWIPER DOTS ─── */
 .swiper-dots {
   display: flex;
   justify-content: center;
@@ -441,42 +447,40 @@ section { padding: 50px 5%; }
   border-radius: 4px;
 }
 
-/* ─── SWIPER ARROWS (desktop) ─── */
+/* ─── SWIPER ARROWS (только десктоп) ─── */
 .swiper-arrow {
   display: none;
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 50%; transform: translateY(-50%);
   z-index: 10;
-  width: 40px; height: 40px;
+  width: 36px; height: 36px;
   border-radius: 50%;
   border: 1.5px solid rgba(62,26,12,0.2);
-  background: rgba(255,255,255,0.9);
-  backdrop-filter: blur(8px);
+  background: rgba(255,255,255,0.95);
   color: var(--choco);
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
   align-items: center; justify-content: center;
   transition: all .2s;
-  box-shadow: var(--shadow);
+  box-shadow: 0 2px 12px rgba(62,26,12,0.12);
 }
-.swiper-arrow:hover { background: var(--choco); color: #fff; border-color: var(--choco); }
-.swiper-arrow.prev { left: -16px; }
-.swiper-arrow.next { right: -16px; }
-@media (min-width: 600px) { .swiper-arrow { display: flex; } }
+.swiper-arrow:hover { background: var(--choco); color: #fff; }
+.swiper-arrow.prev { left: 0; }
+.swiper-arrow.next { right: 0; }
+@media (min-width: 700px) { .swiper-arrow { display: flex; } }
 
 
 
 .card-img {
   width: 100%;
-  height: 0 !important;
-  padding-top: 75% !important; /* 4:3 — компактнее чем квадрат */
+  height: 0;
+  padding-top: 72%; /* немного меньше квадрата */
   position: relative;
   overflow: hidden;
-  border-radius: 0;
   display: block;
   line-height: 0;
   font-size: 0;
+  border-radius: var(--radius) var(--radius) 0 0;
 }
 
 .card-photo {
@@ -485,8 +489,7 @@ section { padding: 50px 5%; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
-  transform: scale(1.15);
+  object-position: center top; /* фокус на верхней части — обычно там торт */
   display: block;
 }
 
@@ -639,18 +642,14 @@ section { padding: 50px 5%; }
 }
 .product-card.flipped .card-inner { transform: rotateY(180deg); }
 
-/* front — в потоке, задаёт высоту карточки */
 .card-front {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   display: flex;
   flex-direction: column;
-  border-radius: var(--radius);
-  overflow: hidden; /* только чтобы скруглить углы фото */
   flex: 1;
 }
 
-/* back — абсолютная поверх front, та же высота */
 .card-back {
   position: absolute;
   inset: 0;
@@ -1266,104 +1265,56 @@ function order(product) {
   window.open(`https://t.me/DianaOmelyanenko?text=${msg}`, '_blank');
 }
 
-// ─── SWIPER ───
+// ─── SWIPER (нативный scroll-snap, без preventDefault) ───
 function initSwiper(sectionEl) {
-  const wrap = sectionEl.querySelector('.swiper-wrap');
   const track = sectionEl.querySelector('.swiper-track');
-  const dots = sectionEl.querySelectorAll('.swiper-dot'); // правильный scope — section!
+  const dots = sectionEl.querySelectorAll('.swiper-dot');
   const prevBtn = sectionEl.querySelector('.swiper-arrow.prev');
   const nextBtn = sectionEl.querySelector('.swiper-arrow.next');
-  const cards = track.querySelectorAll('.product-card');
+  const cards = Array.from(track.querySelectorAll('.product-card'));
   const total = cards.length;
   if (!total) return;
 
   let current = 0;
-  let animating = false;
 
-  // инициализация: первая карточка — активна, остальные скрыты справа
-  cards.forEach((c, i) => {
-    c.classList.remove('swiper-active','swiper-exit-left','swiper-exit-right','swiper-enter-left','swiper-enter-right');
-    if (i === 0) c.classList.add('swiper-active');
-  });
-
-  function updateDots(idx) {
+  // обновляем dots и масштаб карточек
+  function updateUI(idx) {
+    current = idx;
     dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-  }
-  function updateArrows(idx) {
+    cards.forEach((c, i) => c.classList.toggle('snap-active', i === idx));
     if (prevBtn) prevBtn.style.opacity = idx === 0 ? '0.3' : '1';
     if (nextBtn) nextBtn.style.opacity = idx === total - 1 ? '0.3' : '1';
   }
 
-  function goTo(nextIdx) {
-    if (animating || nextIdx === current) return;
-    nextIdx = Math.max(0, Math.min(total - 1, nextIdx));
-    animating = true;
-
-    const direction = nextIdx > current ? 1 : -1; // 1=вперёд, -1=назад
-    const prevCard = cards[current];
-    const nextCard = cards[nextIdx];
-
-    // позиционируем входящую карточку снаружи (справа или слева)
-    nextCard.classList.remove('swiper-active','swiper-exit-left','swiper-exit-right','swiper-enter-left','swiper-enter-right');
-    nextCard.classList.add(direction > 0 ? 'swiper-enter-right' : 'swiper-enter-left');
-    // force reflow
-    nextCard.getBoundingClientRect();
-
-    // запускаем анимацию: старая уходит, новая входит
-    // сначала делаем новую active (чтобы она участвовала в потоке для высоты)
-    prevCard.classList.remove('swiper-active');
-    prevCard.classList.add(direction > 0 ? 'swiper-exit-left' : 'swiper-exit-right');
-
-    nextCard.classList.remove('swiper-enter-left','swiper-enter-right');
-    nextCard.classList.add('swiper-active');
-
-    current = nextIdx;
-    updateDots(current);
-    updateArrows(current);
-
-    // убираем exit-классы после анимации
-    setTimeout(() => {
-      prevCard.classList.remove('swiper-exit-left','swiper-exit-right');
-      animating = false;
-    }, 420);
+  // программный скролл к карточке
+  function scrollTo(idx) {
+    idx = Math.max(0, Math.min(total - 1, idx));
+    const card = cards[idx];
+    // scrollIntoView с nearest — не трогает вертикальный скролл
+    card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    updateUI(idx);
   }
 
-  if (prevBtn) prevBtn.addEventListener('click', () => goTo(current - 1));
-  if (nextBtn) nextBtn.addEventListener('click', () => goTo(current + 1));
-  dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+  // IntersectionObserver следит за тем, какая карточка видна
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.intersectionRatio > 0.5) {
+        const idx = cards.indexOf(e.target);
+        if (idx !== -1 && idx !== current) updateUI(idx);
+      }
+    });
+  }, { root: track, threshold: 0.5 });
+  cards.forEach(c => io.observe(c));
 
-  // ─── TOUCH: разделяем горизонтальный и вертикальный свайп ───
-  let startX = 0, startY = 0, lockAxis = null; // null | 'h' | 'v'
+  // стрелки
+  if (prevBtn) prevBtn.addEventListener('click', () => scrollTo(current - 1));
+  if (nextBtn) nextBtn.addEventListener('click', () => scrollTo(current + 1));
 
-  wrap.addEventListener('touchstart', e => {
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-    lockAxis = null;
-  }, { passive: true });
+  // dots
+  dots.forEach((d, i) => d.addEventListener('click', () => scrollTo(i)));
 
-  wrap.addEventListener('touchmove', e => {
-    if (lockAxis === 'v') return; // вертикальный скролл — не мешаем
-    const dx = Math.abs(e.touches[0].clientX - startX);
-    const dy = Math.abs(e.touches[0].clientY - startY);
-    if (lockAxis === null) {
-      if (dx > 6 || dy > 6) lockAxis = dx > dy ? 'h' : 'v';
-    }
-    if (lockAxis === 'h') {
-      e.preventDefault(); // блокируем вертикальный скролл только при горизонтальном свайпе
-    }
-  }, { passive: false }); // passive: false нужно чтобы работал preventDefault
-
-  wrap.addEventListener('touchend', e => {
-    if (lockAxis !== 'h') return;
-    const dx = startX - e.changedTouches[0].clientX;
-    if (Math.abs(dx) > 40) {
-      goTo(dx > 0 ? current + 1 : current - 1);
-    }
-    lockAxis = null;
-  }, { passive: true });
-
-  updateDots(0);
-  updateArrows(0);
+  // инит
+  updateUI(0);
 }
 
 // ─── N8N MENU LOADER ───
@@ -1505,8 +1456,8 @@ function renderSection(catId, items) {
   <div class="catalog-section reveal">
     <h3 class="cat-section-title" id="cat-section-${slug}">${name}</h3>
     <div class="swiper-wrap">
-      <button class="swiper-arrow prev" aria-label="Предыдущий">‹</button>
       <div class="swiper-track">${cardsHtml}</div>
+      <button class="swiper-arrow prev" aria-label="Предыдущий">‹</button>
       <button class="swiper-arrow next" aria-label="Следующий">›</button>
     </div>
     ${total > 1 ? `<div class="swiper-dots">${dotsHtml}</div>` : ''}
