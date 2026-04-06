@@ -615,6 +615,17 @@ section { padding: 50px 5%; }
 }
 .product-card.flipped .card-inner { transform: rotateY(180deg); }
 
+/* На мобиле отключаем 3D-flip — composite layers с preserve-3d роняют WebView */
+@media (max-width: 900px) {
+  .product-card { perspective: none; }
+  .card-inner { transition: none; transform-style: flat; }
+  .product-card.flipped .card-inner { transform: none; }
+  .card-front { backface-visibility: visible; -webkit-backface-visibility: visible; }
+  .product-card.flipped .card-front { display: none; }
+  .card-back { position: absolute; transform: none; backface-visibility: visible; -webkit-backface-visibility: visible; }
+  .product-card:not(.flipped) .card-back { display: none; }
+}
+
 .card-front {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -1582,28 +1593,30 @@ observeReveal();
 
     const el = document.createElement('span');
     el.className = 'float-emoji';
-    let emoji;
-    do { emoji = emojis[Math.floor(Math.random() * emojis.length)]; }
-    while (emoji === lastEmoji);
+    // выбираем эмодзи отличный от прошлого (с safety-limit)
+    let emoji = emojis[Math.floor(Math.random() * emojis.length)];
+    for (let tries = 0; tries < 5 && emoji === lastEmoji; tries++) {
+      emoji = emojis[Math.floor(Math.random() * emojis.length)];
+    }
     lastEmoji = emoji;
     el.textContent = emoji;
 
-    let left;
-    do { left = 5 + Math.random() * 90; }
-    while (Math.abs(left - lastLeft) < 15);
+    // выбираем позицию отличную от прошлой (с safety-limit)
+    let left = 5 + Math.random() * 90;
+    for (let tries = 0; tries < 5 && Math.abs(left - lastLeft) < 15; tries++) {
+      left = 5 + Math.random() * 90;
+    }
     lastLeft = left;
 
     const size = 1.2 + Math.random() * 0.8;
     const duration = 12 + Math.random() * 6;
-    const isSharp = ['🍰','🧁','🎂','🍫','🍪'].includes(emoji);
-    const blur = isSharp ? 0 : (3 + Math.random() * 4);
-    const opacity = isSharp ? 0.8 : 0.25 + Math.random() * 0.2;
+    // blur отключён — убивает GPU в Telegram WebView на слабых устройствах
+    const opacity = 0.6 + Math.random() * 0.3;
 
     el.style.cssText = `
       left: ${left}%;
       top: -60px;
       font-size: ${size}rem;
-      filter: blur(${blur}px);
       opacity: ${opacity};
       animation-duration: ${duration}s;
       animation-delay: 0s;
@@ -1618,24 +1631,26 @@ observeReveal();
 
   // останавливаем когда hero вне видимости (пользователь проскроллил вниз)
   const heroEl = document.querySelector('.hero');
+  function startInterval() {
+    if (intervalId) return;
+    intervalId = setInterval(createEmoji, 5000);
+  }
+  function stopInterval() {
+    if (intervalId) { clearInterval(intervalId); intervalId = null; }
+    while (container.firstChild) container.firstChild.remove();
+  }
   if (heroEl && 'IntersectionObserver' in window) {
     const heroObs = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        if (!intervalId) intervalId = setInterval(createEmoji, 4000);
-      } else {
-        clearInterval(intervalId);
-        intervalId = null;
-        // убираем все текущие эмодзи
-        while (container.firstChild) container.firstChild.remove();
-      }
-    }, { threshold: 0.1 });
+      if (entries[0].isIntersecting) startInterval();
+      else stopInterval();
+    }, { threshold: 0 });
     heroObs.observe(heroEl);
   } else {
-    intervalId = setInterval(createEmoji, 4000);
+    startInterval();
   }
 
-  // первые 3 с задержкой
-  for (let i = 0; i < 3; i++) setTimeout(createEmoji, i * 1500);
+  // первые 2 с задержкой (было 3 — уменьшили нагрузку)
+  for (let i = 0; i < 2; i++) setTimeout(createEmoji, i * 2000);
 })();
 </script>
 </body>
