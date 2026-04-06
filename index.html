@@ -105,11 +105,14 @@ nav {
 }
 /* ─── NAV в Telegram Mini App — расширенный хедер ─── */
 body.is-tg nav {
-  height: calc(52px + var(--tg-top));
+  height: calc(96px + var(--tg-top));
   padding: 0 5% 10px;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
+}
+body.is-tg .cat-nav {
+  top: calc(96px + var(--tg-top));
 }
 /* backdrop-filter только на десктопе — на мобиле/WebView роняет GPU */
 @media (min-width: 900px) {
@@ -407,10 +410,7 @@ section { padding: 50px 5%; }
   box-sizing: border-box;
   transition: opacity .3s, transform .3s;
 }
-/* В Telegram: cat-nav опускается под расширенный хедер */
-body.is-tg .cat-nav {
-  top: calc(52px + var(--tg-top));
-}
+/* В Telegram: cat-nav опускается под расширенный хедер — см. body.is-tg nav выше */
 @media (min-width: 900px) {
   .cat-nav { background: transparent; }
 }
