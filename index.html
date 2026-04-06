@@ -1053,7 +1053,7 @@ footer {
     </div>
     <div class="hero-bottom">
     <div class="hero-btns">
-      <a href="https://t.me/DianaOmelyanenko?text=Привет! Интересует заказ десерта, можете рассказать подробнее?" class="btn-primary" target="_blank">
+      <a href="https://t.me/DianaOmelyanenko" class="btn-primary" target="_blank">
         <span>Заказать</span> <span>→</span>
       </a>
       <a href="#catalog" class="btn-outline" onclick="event.preventDefault();scrollToCatalogSection('бенто')">Смотреть каталог</a>
@@ -1182,7 +1182,7 @@ footer {
    <h2 class="section-title" style="font-size:1.8rem;">Готовы сделать заказ?</h2>
     <p class="section-desc">Напишите нам — ответим быстро, поможем выбрать и согласуем все детали.</p>
     <div class="contact-btns">
-      <a href="https://t.me/DianaOmelyanenko?text=Привет! Интересует заказ десерта, можете рассказать подробнее?" class="contact-btn btn-tg" target="_blank">
+      <a href="https://t.me/DianaOmelyanenko" class="contact-btn btn-tg" target="_blank">
         <span>✈</span> Telegram
       </a>
     </div>
@@ -1319,10 +1319,10 @@ function flipCard(btn) {
 // ─── ORDER ───
 function order(product) {
   const text = 'Привет! Хочу заказать: ' + product;
-  const url = 'https://t.me/DianaOmelyanenko?text=' + encodeURIComponent(text);
-  // window.open работает корректно даже внутри Telegram Mini App
-  // openTelegramLink в ряде версий повторно кодирует query и ломает кириллицу
-  window.open(url, '_blank');
+  // tg://resolve обрабатывается нативным клиентом Telegram и корректно декодирует кириллицу,
+  // в отличие от https://t.me/...?text=... который проходит через веб-редирект и ломает encoding
+  const url = 'tg://resolve?domain=DianaOmelyanenko&text=' + encodeURIComponent(text);
+  window.location.href = url;
 }
 
 // ─── SWIPER (translateX, все listeners passive, вертикальный скролл свободен) ───
