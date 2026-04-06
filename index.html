@@ -61,12 +61,17 @@ body {
   background: linear-gradient(160deg, #fff 0%, #fff8f8 30%, #ffeaea 60%, #fddede 100%);
 }
  
+/* ─── TG SAFE AREA ─── */
+:root {
+  --tg-top: env(safe-area-inset-top, 0px);
+}
+
 /* ─── NAV ─── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  padding: 0 5%;
+  padding: var(--tg-top) 5% 0;
   display: flex; align-items: center; justify-content: center;
-  height: 56px;
+  height: calc(56px + var(--tg-top));
   background: rgba(255,255,255,0.95);
   border-bottom: 1px solid rgba(196,133,90,0.12);
   transition: box-shadow .3s, opacity .3s, transform .3s;
@@ -362,7 +367,7 @@ section { padding: 50px 5%; }
 
 .cat-nav {
   display: none;
-  position: fixed; top: 56px; left: 0; right: 0; z-index: 99;
+  position: fixed; top: calc(56px + var(--tg-top)); left: 0; right: 0; z-index: 99;
   background: rgba(255,255,255,0.97);
   border-bottom: 1px solid rgba(196,133,90,0.12);
   padding: 8px 5%;
@@ -1474,9 +1479,10 @@ function renderHearts(сладость) {
 function renderSizes(варианты) {
   if (!варианты || !варианты.length) return '';
   const rows = варианты.map(в => {
-    const вес = в.вес >= 1000 
-      ? (Math.round(в.вес/100)/10) + ' кг' 
-      : в.вес + ' г';
+    const весГ = в.вес || в.вес_г || 0;
+    const вес = весГ >= 1000 
+      ? (Math.round(весГ/100)/10) + ' кг' 
+      : весГ + ' г';
     return `
     <tr>
       <td>${вес}</td>
@@ -1534,18 +1540,23 @@ function renderCard(т) {
       <div class="card-back">
         <div class="card-back-title">${названиеHtml}</div>
 
-        ${т.состав ? `<div class="card-back-row"><div class="card-back-label">Состав</div><div class="card-back-value">${escapeHtml(т.состав)}</div></div>` : ''}
-        ${т.аллергены ? `<div class="card-back-row"><div class="card-back-label">Аллергены</div><div class="card-back-value">${escapeHtml(т.аллергены)}</div></div>` : ''}
-        ${(т.кастомизация || т.можно_поменять) ? `<div class="card-back-row"><div class="card-back-label">Можно изменить</div><div class="card-back-value">${escapeHtml(т.кастомизация || т.можно_поменять)}</div></div>` : ''}
+        ${т.описание && !т.состав?.trim() ? `<div class="card-back-row"><div class="card-back-label">Описание</div><div class="card-back-value">${escapeHtml(т.описание)}</div></div>` : ''}
+        ${т.состав?.trim() ? `<div class="card-back-row"><div class="card-back-label">Состав</div><div class="card-back-value">${escapeHtml(т.состав)}</div></div>` : ''}
+        ${т.аллергены?.trim() ? `<div class="card-back-row"><div class="card-back-label">Аллергены</div><div class="card-back-value">${escapeHtml(т.аллергены)}</div></div>` : ''}
+        ${(т.кастомизация?.trim() || т.можно_поменять?.trim()) ? `<div class="card-back-row"><div class="card-back-label">Можно изменить</div><div class="card-back-value">${escapeHtml(т.кастомизация || т.можно_поменять)}</div></div>` : ''}
         ${showMinOrder ? `<div class="card-back-row"><div class="card-back-label">Минимальный заказ</div><div class="card-back-value">${escapeHtml(т.минимальный_заказ)}</div></div>` : ''}
+        ${(т.начинки && т.начинки.length) ? `<div class="card-back-row"><div class="card-back-label">Начинки</div><div class="card-back-value">${escapeHtml(т.начинки.join(', '))}</div></div>` : ''}
 
-        ${т.сладость ? `
+        ${т.сладость != null && т.сладость !== '' ? `
         <div class="card-back-sweet">
           <div class="card-back-sweet-label">Сладость</div>
           ${renderHearts(т.сладость)}
         </div>` : ''}
 
         ${renderSizes(варианты)}
+
+        ${!т.описание?.trim() && !т.состав?.trim() && !т.аллергены?.trim() && (т.сладость == null || т.сладость === '') && !варианты.length && !(т.начинки && т.начинки.length) ? `
+        <div class="card-back-row"><div class="card-back-value" style="color:var(--text-light);font-style:italic">Подробная информация появится позже</div></div>` : ''}
 
         <div class="card-back-btns">
           <button class="card-flip-back" type="button">← Назад</button>
