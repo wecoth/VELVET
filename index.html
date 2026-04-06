@@ -1108,9 +1108,24 @@ body.is-tg .hero-top { margin-top: 20px; }
     grid-template-columns: 1fr;
     justify-items: center;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    padding: 0 5%;
   }
   .hero-right { display: none !important; }
-  .hero-left { display: flex; flex-direction: column; align-items: center; max-width: 640px; }
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 640px;
+    width: 100%;
+    flex: 1;
+    padding-top: 120px;
+    padding-bottom: 80px;
+  }
+  .hero-top { display: flex; flex-direction: column; align-items: center; }
+  .hero-middle { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 0; }
+  .hero-bottom { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: auto; }
   .hero-desc { text-align: center; margin: 0 auto 36px; }
   .hero-btns { justify-content: center; }
   .hero-cats { justify-content: center; }
