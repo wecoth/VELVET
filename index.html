@@ -8,41 +8,40 @@
 <script>
   if (window.Telegram && window.Telegram.WebApp) {
     const tg = window.Telegram.WebApp;
-    tg.ready();
-    tg.expand();
 
-    // Добавляем класс — все TG-специфичные стили вешаются через body.is-tg
-    document.documentElement.classList.add('is-tg');
-    document.addEventListener('DOMContentLoaded', () => {
-      document.body.classList.add('is-tg');
-    });
+    // Проверяем что мы реально внутри TG, а не просто в браузере где загрузился скрипт
+    const isReallyTg = tg.platform && tg.platform !== 'unknown' && tg.platform !== '';
 
-    // Устанавливаем --tg-top через CSS переменную на :root
-    // Bot API 8.0+ — используем tg.safeAreaInset.top если доступен
-    function applyTgSafeArea() {
-      let topPx = 44; // разумный fallback для fullscreen TG
+    if (isReallyTg) {
+      tg.ready();
+      tg.expand();
+
+      // Добавляем класс — все TG-специфичные стили вешаются через body.is-tg
+      document.documentElement.classList.add('is-tg');
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.classList.add('is-tg');
+      });
+
+      // Устанавливаем --tg-top через CSS переменную на :root
+      function applyTgSafeArea() {
+        let topPx = 44;
+        try {
+          if (tg.safeAreaInset && typeof tg.safeAreaInset.top === 'number') {
+            topPx = tg.safeAreaInset.top;
+          }
+        } catch(e) {}
+        document.documentElement.style.setProperty('--tg-top', topPx + 'px');
+      }
+      applyTgSafeArea();
+      try { tg.onEvent('safeAreaChanged', applyTgSafeArea); } catch(e) {}
+
       try {
-        if (tg.safeAreaInset && typeof tg.safeAreaInset.top === 'number') {
-          topPx = tg.safeAreaInset.top;
-        }
+        if (typeof tg.requestFullscreen === 'function') tg.requestFullscreen();
       } catch(e) {}
-      document.documentElement.style.setProperty('--tg-top', topPx + 'px');
+      try {
+        if (typeof tg.disableVerticalSwipes === 'function') tg.disableVerticalSwipes();
+      } catch(e) {}
     }
-    applyTgSafeArea();
-    try { tg.onEvent('safeAreaChanged', applyTgSafeArea); } catch(e) {}
-
-    // настоящий фуллскрин (Bot API 8.0+) — прячет системный хедер Telegram
-    try {
-      if (typeof tg.requestFullscreen === 'function') {
-        tg.requestFullscreen();
-      }
-    } catch (e) { /* старый клиент — просто остаёмся в expand */ }
-    // отключаем вертикальные свайпы которые могут свернуть Mini App
-    try {
-      if (typeof tg.disableVerticalSwipes === 'function') {
-        tg.disableVerticalSwipes();
-      }
-    } catch (e) {}
   }
 </script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
