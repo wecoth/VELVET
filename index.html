@@ -334,14 +334,12 @@ section { padding: 50px 5%; }
   overflow: hidden;
   padding: 8px 5% 16px;
   box-sizing: border-box;
-  touch-action: pan-y;
 }
 
 .swiper-track {
   display: flex;
   gap: 12px;
   transition: transform 0.38s cubic-bezier(.4,0,.2,1);
-  touch-action: pan-y;
 }
 
 .product-card {
@@ -521,6 +519,14 @@ section { padding: 50px 5%; }
 .card-meta,
 .card-actions {
   touch-action: pan-y;
+}
+
+.card-body {
+  padding: 0 20px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-top: 0;
 }
 
 .card-name {
