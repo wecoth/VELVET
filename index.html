@@ -10,6 +10,27 @@
     const tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
+
+    // Добавляем класс — все TG-специфичные стили вешаются через body.is-tg
+    document.documentElement.classList.add('is-tg');
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('is-tg');
+    });
+
+    // Устанавливаем --tg-top через CSS переменную на :root
+    // Bot API 8.0+ — используем tg.safeAreaInset.top если доступен
+    function applyTgSafeArea() {
+      let topPx = 44; // разумный fallback для fullscreen TG
+      try {
+        if (tg.safeAreaInset && typeof tg.safeAreaInset.top === 'number') {
+          topPx = tg.safeAreaInset.top;
+        }
+      } catch(e) {}
+      document.documentElement.style.setProperty('--tg-top', topPx + 'px');
+    }
+    applyTgSafeArea();
+    try { tg.onEvent('safeAreaChanged', applyTgSafeArea); } catch(e) {}
+
     // настоящий фуллскрин (Bot API 8.0+) — прячет системный хедер Telegram
     try {
       if (typeof tg.requestFullscreen === 'function') {
@@ -65,6 +86,7 @@ body {
 :root {
   --tg-top: env(safe-area-inset-top, 0px);
 }
+/* В Telegram: JS добавляет .is-tg на body и переопределяет --tg-top */
 
 /* ─── NAV ─── */
 nav {
@@ -80,6 +102,14 @@ nav {
   opacity: 0;
   pointer-events: none;
   transform: translateY(-8px);
+}
+/* ─── NAV в Telegram Mini App — расширенный хедер ─── */
+body.is-tg nav {
+  height: calc(52px + var(--tg-top));
+  padding: 0 5% 10px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
 }
 /* backdrop-filter только на десктопе — на мобиле/WebView роняет GPU */
 @media (min-width: 900px) {
@@ -129,6 +159,15 @@ nav.scrolled { box-shadow: 0 4px 30px rgba(62,26,12,0.08); }
   line-height: 1.4;
   border-left: 1px solid rgba(62,26,12,0.2);
   padding-left: 12px;
+}
+/* В TG: логотип чуть компактнее, текст помещается в строку */
+body.is-tg .nav-logo {
+  font-size: 1.5rem;
+  gap: 10px;
+}
+body.is-tg .nav-logo-sub {
+  font-size: .6rem;
+  padding-left: 10px;
 }
 .nav-links {
   display: flex; gap: 32px; list-style: none;
@@ -367,6 +406,10 @@ section { padding: 50px 5%; }
   padding: 8px 5%;
   box-sizing: border-box;
   transition: opacity .3s, transform .3s;
+}
+/* В Telegram: cat-nav опускается под расширенный хедер */
+body.is-tg .cat-nav {
+  top: calc(52px + var(--tg-top));
 }
 @media (min-width: 900px) {
   .cat-nav { background: transparent; }
