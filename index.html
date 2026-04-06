@@ -930,14 +930,11 @@ footer {
 /* ─── SWIPE HINT ─── */
 @keyframes swipeHint {
   0%   { transform: translateX(0); }
-  25%  { transform: translateX(-28px); }
-  55%  { transform: translateX(6px); }
-  75%  { transform: translateX(-10px); }
-  90%  { transform: translateX(2px); }
+  30%  { transform: translateX(-18px); }
   100% { transform: translateX(0); }
 }
 .swiper-track.hint {
-  animation: swipeHint 0.7s cubic-bezier(.4,0,.2,1) forwards;
+  animation: swipeHint 1.1s ease-in-out forwards;
 }
 .reveal {
   opacity: 0; transform: translateY(16px);
@@ -1698,10 +1695,10 @@ function initSwipeHints() {
         void track.offsetWidth; // reflow
         track.classList.add('hint');
         track.addEventListener('animationend', () => track.classList.remove('hint'), { once: true });
-      }, 400);
+      }, 600);
       hintObs.unobserve(entry.target);
     });
-  }, { threshold: 0.3 });
+  }, { threshold: 0.85 });
 
   document.querySelectorAll('.catalog-section').forEach(sec => hintObs.observe(sec));
 }
