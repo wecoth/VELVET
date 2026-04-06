@@ -115,7 +115,9 @@ body.is-tg .cat-nav {
 }
 /* backdrop-filter только на десктопе — на мобиле/WebView роняет GPU */
 @media (min-width: 900px) {
-  nav { backdrop-filter: blur(20px); background: rgba(255,255,255,0.55); }
+  nav { backdrop-filter: blur(20px); background: rgba(255,255,255,0.55); justify-content: space-between; }
+  .nav-logo { margin-right: auto; }
+  .nav-btn { display: none; }
 }
 nav.nav-visible {
   opacity: 1;
