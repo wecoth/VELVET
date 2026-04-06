@@ -288,21 +288,75 @@ section { padding: 50px 5%; }
 }
  
 /* ─── CATALOG ─── */
-#catalog { background: var(--beige); padding-bottom: 60px; }
-.catalog-section {
-  margin-bottom: 48px;
+#catalog {
   background: var(--beige);
-  border-radius: 20px;
-  padding: 20px 16px 20px;
+  padding: 50px 0 60px 0; /* убираем боковые — track идёт на всю ширину */
 }
-.catalog-section:last-child { margin-bottom: 0; }.catalog-head {
+.catalog-head {
+  padding: 0 5%;
   display: flex; flex-direction: column;
   align-items: flex-start; gap: 20px;
   margin-bottom: 28px;
 }
+.catalog-section {
+  margin-bottom: 40px;
+}
+.catalog-section:last-child { margin-bottom: 0; }
 
+.cat-section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--choco);
+  padding: 0 5% 12px;
+  border-bottom: 1px solid var(--beige-dark);
+  margin-bottom: 16px;
+  scroll-margin-top: 120px;
+}
 
-.cat-nav {
+/* ─── HORIZONTAL SWIPER — full-width с peek ─── */
+.swiper-wrap {
+  position: relative;
+  /* overflow clip только по горизонтали — чтобы соседние не выходили за экран */
+  overflow: hidden;
+}
+
+.swiper-track {
+  display: flex;
+  gap: 12px;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  /* padding по бокам: первая карточка не прилипает к краю,
+     и виден кусочек следующей */
+  padding: 8px 5% 16px;
+  /* scroll-padding = тот же отступ что padding слева */
+  scroll-padding-inline: 5%;
+}
+.swiper-track::-webkit-scrollbar { display: none; }
+
+.product-card {
+  /* карточка чуть уже viewport — чтобы виден peek справа */
+  flex: 0 0 calc(100vw - 10% - 24px); /* 100vw минус оба padding минус половину gap peek */
+  min-width: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+
+  /* внешний вид */
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(62,26,12,0.10);
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  perspective: 1000px;
+}
+
+.product-card.hidden { display: none; }.cat-nav {
   display: none;
   position: fixed; top: 56px; left: 0; right: 0; z-index: 99;
   background: rgba(255,255,255,0.92);
@@ -358,72 +412,6 @@ section { padding: 50px 5%; }
 }
 .catalog-section:last-child { margin-bottom: 0; }
 
-.cat-section-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: var(--choco);
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--beige-dark);
-  margin-bottom: 16px;
-  scroll-margin-top: 120px;
-}
-
-/* ─── HORIZONTAL SWIPER — нативный scroll-snap ─── */
-.swiper-wrap {
-  position: relative;
-  /* боковые padding создают видимость соседних карточек */
-  padding: 0 28px;
-  margin: 0 -16px; /* компенсируем padding секции чтобы выйти за край */
-  box-sizing: border-box;
-}
-
-.swiper-track {
-  display: flex;
-  gap: 12px;
-  overflow-x: scroll;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  /* убираем overscroll чтобы не тригерить page refresh */
-  overscroll-behavior-x: contain;
-  /* padding по бокам показывает кусочки соседних карточек */
-  padding: 8px 0 12px 0;
-  scroll-padding-left: 0;
-}
-.swiper-track::-webkit-scrollbar { display: none; }
-
-.product-card {
-  /* каждая карточка занимает всю видимую зону (wrap минус padding) */
-  flex: 0 0 calc(100% - 0px);
-  min-width: 0;
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
-
-  /* внешний вид */
-  background: var(--white);
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(62,26,12,0.10);
-  cursor: default;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  perspective: 1000px;
-
-  /* плавный масштаб неактивных карточек */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  transform: scale(0.96);
-}
-
-/* активная (центральная) карточка чуть крупнее */
-.product-card.snap-active {
-  transform: scale(1);
-  box-shadow: 0 8px 32px rgba(62,26,12,0.16);
-}
-
-.product-card.hidden { display: none; }
-
 /* ─── SWIPER DOTS ─── */
 .swiper-dots {
   display: flex;
@@ -474,7 +462,7 @@ section { padding: 50px 5%; }
 .card-img {
   width: 100%;
   height: 0;
-  padding-top: 72%; /* немного меньше квадрата */
+  padding-top: 85%; /* почти квадрат, чуть меньше */
   position: relative;
   overflow: hidden;
   display: block;
@@ -489,7 +477,7 @@ section { padding: 50px 5%; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top; /* фокус на верхней части — обычно там торт */
+  object-position: center;
   display: block;
 }
 
