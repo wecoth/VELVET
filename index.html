@@ -1542,12 +1542,6 @@ function renderCard(т) {
       <div class="card-back">
         <div class="card-back-title">${названиеHtml || '(нет названия)'}</div>
 
-        <!-- DEBUG: убрать после проверки -->
-        <details style="margin-bottom:10px;font-size:.7rem;color:var(--text-light)">
-          <summary>🛠 debug данные</summary>
-          <pre style="white-space:pre-wrap;word-break:break-all;font-size:.65rem;margin-top:6px">${escapeHtml(JSON.stringify({описание:т.описание,состав:т.состав,аллергены:т.аллергены,сладость:т.сладость,начинки:т.начинки,размеры:т.размеры,варианты_фильтр:варианты}, null, 2))}</pre>
-        </details>
-
         ${т.описание && !т.состав?.trim() ? `<div class="card-back-row"><div class="card-back-label">Описание</div><div class="card-back-value">${escapeHtml(т.описание)}</div></div>` : ''}
         ${т.состав?.trim() ? `<div class="card-back-row"><div class="card-back-label">Состав</div><div class="card-back-value">${escapeHtml(т.состав)}</div></div>` : ''}
         ${т.аллергены?.trim() ? `<div class="card-back-row"><div class="card-back-label">Аллергены</div><div class="card-back-value">${escapeHtml(т.аллергены)}</div></div>` : ''}
