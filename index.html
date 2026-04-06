@@ -1225,15 +1225,6 @@ footer {
  
 <script>
 // ─── NAV SCROLL ───
-let navThreshold = 0;
-function calcNavThreshold() {
-  const hero = document.querySelector('.hero');
-  if (hero) navThreshold = hero.offsetTop + hero.offsetHeight * 0.4;
-}
-calcNavThreshold();
-window.addEventListener('load', calcNavThreshold);
-window.addEventListener('resize', calcNavThreshold, { passive: true });
-
 // ─── GENERAL SECTION SCROLL (для nav-ссылок) ───
 function scrollToSection(id) {
   const el = document.getElementById(id);
@@ -1297,6 +1288,21 @@ function scrollToCatalogSection(slug) {
   window.scrollTo({ top, behavior: 'smooth' });
 }
 
+// ─── NAV: появляется когда hero-title уходит с экрана, остаётся до возврата ───
+(function() {
+  const mainNavEl = document.getElementById('main-nav');
+  const heroTitle = document.querySelector('.hero-title');
+  if (!heroTitle) return;
+
+  const obs = new IntersectionObserver((entries) => {
+    const titleVisible = entries[0].isIntersecting;
+    mainNavEl.classList.toggle('nav-visible', !titleVisible);
+    mainNavEl.classList.toggle('scrolled', !titleVisible);
+  }, { threshold: 0 });
+
+  obs.observe(heroTitle);
+})();
+
 // ─── SCROLL (throttled, не чаще 60fps) ───
 let _scrollTicking = false;
 window.addEventListener('scroll', () => {
@@ -1304,20 +1310,17 @@ window.addEventListener('scroll', () => {
   _scrollTicking = true;
   requestAnimationFrame(() => {
     const y = window.scrollY;
-    const mainNavEl = document.getElementById('main-nav');
-    const navVisible = y > navThreshold;
-    mainNavEl.classList.toggle('scrolled', y > 40);
-    mainNavEl.classList.toggle('nav-visible', navVisible);
 
-    // cat-nav показываем только когда main-nav уже виден И каталог в зоне видимости
+    // cat-nav показываем только когда main-nav виден И каталог в зоне видимости
     const catalog = document.getElementById('catalog');
     if (catalog) {
       const catTop = catalog.getBoundingClientRect().top;
+      const mainNavEl = document.getElementById('main-nav');
+      const navVisible = mainNavEl.classList.contains('nav-visible');
       const catNavEl = document.getElementById('cat-nav');
       const wasVisible = catNavEl.classList.contains('visible');
       const nowVisible = navVisible && catTop < 56;
       catNavEl.classList.toggle('visible', nowVisible);
-      // при первом появлении — позиционируем слайдер
       if (nowVisible && !wasVisible) {
         requestAnimationFrame(() => updateCatNavSlider(activeSectionSlug));
       }
