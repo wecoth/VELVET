@@ -657,20 +657,22 @@ section { padding: 50px 5%; }
    Плюс делаем card-back обычным блоком (не absolute), чтобы карточка подстраивалась
    под высоту обратной стороны и показывала весь контент. */
 @media (max-width: 900px) {
-  .product-card { perspective: none; }
+  .product-card { perspective: none; overflow: visible; }
+  .product-card.flipped { overflow: hidden; }
   .card-inner { transition: none; transform-style: flat; }
   .product-card.flipped .card-inner { transform: none; }
-  .card-front { backface-visibility: visible; -webkit-backface-visibility: visible; }
+  .card-front { backface-visibility: visible; -webkit-backface-visibility: visible; overflow: visible; }
   .product-card.flipped .card-front { display: none; }
   .card-back {
     position: static;
     inset: auto;
-    transform: none;
+    transform: none !important;
     backface-visibility: visible;
     -webkit-backface-visibility: visible;
-    overflow: visible; /* пусть контент определяет высоту */
+    overflow-y: auto;
     height: auto;
-    min-height: 0;
+    min-height: 400px;
+    flex: 1;
   }
   .product-card:not(.flipped) .card-back { display: none; }
 }
