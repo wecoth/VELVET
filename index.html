@@ -1053,7 +1053,7 @@ footer {
     </div>
     <div class="hero-bottom">
     <div class="hero-btns">
-      <a href="https://t.me/DianaOmelyanenko?text=Привет!%20Интересует%20заказ%20десерта%2C%20можете%20рассказать%20подробнее%3F" class="btn-primary" target="_blank">
+      <a href="https://t.me/DianaOmelyanenko?text=Привет! Интересует заказ десерта, можете рассказать подробнее?" class="btn-primary" target="_blank">
         <span>Заказать</span> <span>→</span>
       </a>
       <a href="#catalog" class="btn-outline" onclick="event.preventDefault();scrollToCatalogSection('бенто')">Смотреть каталог</a>
@@ -1182,7 +1182,7 @@ footer {
    <h2 class="section-title" style="font-size:1.8rem;">Готовы сделать заказ?</h2>
     <p class="section-desc">Напишите нам — ответим быстро, поможем выбрать и согласуем все детали.</p>
     <div class="contact-btns">
-      <a href="https://t.me/DianaOmelyanenko?text=Привет!%20Интересует%20заказ%20десерта%2C%20можете%20рассказать%20подробнее%3F" class="contact-btn btn-tg" target="_blank">
+      <a href="https://t.me/DianaOmelyanenko?text=Привет! Интересует заказ десерта, можете рассказать подробнее?" class="contact-btn btn-tg" target="_blank">
         <span>✈</span> Telegram
       </a>
     </div>
@@ -1320,11 +1320,9 @@ function flipCard(btn) {
 function order(product) {
   const text = 'Привет! Хочу заказать: ' + product;
   const url = 'https://t.me/DianaOmelyanenko?text=' + encodeURIComponent(text);
-  if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openTelegramLink) {
-    window.Telegram.WebApp.openTelegramLink(url);
-  } else {
-    window.open(url, '_blank');
-  }
+  // window.open работает корректно даже внутри Telegram Mini App
+  // openTelegramLink в ряде версий повторно кодирует query и ломает кириллицу
+  window.open(url, '_blank');
 }
 
 // ─── SWIPER (translateX, все listeners passive, вертикальный скролл свободен) ───
