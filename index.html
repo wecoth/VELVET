@@ -72,8 +72,10 @@ nav {
   padding: var(--tg-top) 5% 0;
   display: flex; align-items: center; justify-content: center;
   height: calc(56px + var(--tg-top));
-  background: rgba(255,255,255,0.95);
-  border-bottom: 1px solid rgba(196,133,90,0.12);
+  background: rgba(255,255,255,0.60);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(196,133,90,0.10);
   transition: box-shadow .3s, opacity .3s, transform .3s;
   opacity: 0;
   pointer-events: none;
@@ -81,7 +83,7 @@ nav {
 }
 /* backdrop-filter только на десктопе — на мобиле/WebView роняет GPU */
 @media (min-width: 900px) {
-  nav { backdrop-filter: blur(16px); background: rgba(255,255,255,0.88); }
+  nav { backdrop-filter: blur(20px); background: rgba(255,255,255,0.55); }
 }
 nav.nav-visible {
   opacity: 1;
@@ -321,13 +323,7 @@ section { padding: 50px 5%; }
 .catalog-section:last-child { margin-bottom: 0; }
 
 .cat-section-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--choco);
-  padding: 0 5% 12px;
-  border-bottom: 1px solid var(--beige-dark);
-  margin-bottom: 16px;
+  display: none;
   scroll-margin-top: 120px;
 }
 
@@ -368,28 +364,32 @@ section { padding: 50px 5%; }
 .cat-nav {
   display: none;
   position: fixed; top: calc(56px + var(--tg-top)); left: 0; right: 0; z-index: 99;
-  background: rgba(255,255,255,0.97);
-  border-bottom: 1px solid rgba(196,133,90,0.12);
+  background: transparent;
+  border-bottom: none;
   padding: 8px 5%;
   box-sizing: border-box;
   transition: opacity .3s, transform .3s;
 }
 @media (min-width: 900px) {
-  .cat-nav { backdrop-filter: blur(24px); background: rgba(255,255,255,0.92); }
+  .cat-nav { background: transparent; }
 }
 .cat-nav.visible { display: block; }
 .cat-nav-inner {
   display: flex;
   width: 100%;
-  background: rgba(62,26,12,0.07);
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.55);
   border-radius: 50px;
   padding: 4px;
   position: relative;
   gap: 0;
   flex-wrap: nowrap;
-  overflow-x: auto;
+  overflow: visible;
   scrollbar-width: none;
   box-sizing: border-box;
+  box-shadow: 0 4px 24px rgba(62,26,12,0.10);
 }
 .cat-nav-inner::-webkit-scrollbar { display: none; }
 .cat-nav-slider {
@@ -957,7 +957,7 @@ footer {
   .layers-pick { justify-content: center; }
   .hero-tag { font-size: .65rem; padding: 4px 12px; }
   .hero-btns { margin-top: 0; }
-  nav { background: rgba(255,255,255,0.97); }
+  nav { background: rgba(255,255,255,0.65); }
 }
 @media (max-width: 600px) {
   section { padding: 40px 5%; }
@@ -1253,6 +1253,29 @@ function updateCatNavSlider(slug) {
   }
 }
 
+// IntersectionObserver — подсвечиваем секцию как только она заходит в верхние 50% экрана
+function initSectionObserver() {
+  const rootMargin = '-10% 0px -45% 0px'; // триггер когда верх секции в верхней половине экрана
+  const obs = new IntersectionObserver((entries) => {
+    // берём самую верхнюю видимую секцию
+    const visible = entries
+      .filter(e => e.isIntersecting)
+      .map(e => e.target.id.replace('cat-section-', ''));
+    if (visible.length === 0) return;
+    // находим наиболее раннюю в порядке SECTIONS_ORDER
+    const topSlug = SECTIONS_ORDER.find(s => visible.includes(s)) || visible[0];
+    if (topSlug && activeSectionSlug !== topSlug) {
+      activeSectionSlug = topSlug;
+      updateCatNavSlider(topSlug);
+    }
+  }, { rootMargin, threshold: 0 });
+
+  SECTIONS_ORDER.forEach(slug => {
+    const el = document.getElementById('cat-section-' + slug);
+    if (el) obs.observe(el);
+  });
+}
+
 function scrollToCatalogSection(slug) {
   const section = document.getElementById('cat-section-' + slug);
   if (!section) return;
@@ -1281,25 +1304,20 @@ window.addEventListener('scroll', () => {
     const catalog = document.getElementById('catalog');
     if (catalog) {
       const catTop = catalog.getBoundingClientRect().top;
-      document.getElementById('cat-nav').classList.toggle('visible', navVisible && catTop < 56);
+      const catNavEl = document.getElementById('cat-nav');
+      const wasVisible = catNavEl.classList.contains('visible');
+      const nowVisible = navVisible && catTop < 56;
+      catNavEl.classList.toggle('visible', nowVisible);
+      // при первом появлении — позиционируем слайдер
+      if (nowVisible && !wasVisible) {
+        requestAnimationFrame(() => updateCatNavSlider(activeSectionSlug));
+      }
     }
 
     // back to top
     document.getElementById('back-to-top').classList.toggle('visible', y > 400);
 
-    // автоподсветка секции
-    const navH = 56 + 52 + 20;
-    for (let i = SECTIONS_ORDER.length - 1; i >= 0; i--) {
-      const slug = SECTIONS_ORDER[i];
-      const sec = document.getElementById('cat-section-' + slug);
-      if (sec && sec.getBoundingClientRect().top <= navH) {
-        if (activeSectionSlug !== slug) {
-          activeSectionSlug = slug;
-          updateCatNavSlider(slug);
-        }
-        break;
-      }
-    }
+    // автоподсветка секции — теперь через IntersectionObserver (initSectionObserver)
     _scrollTicking = false;
   });
 }, { passive: true });
@@ -1629,7 +1647,10 @@ async function loadMenu() {
     observeReveal();
 
     // инициализируем cat-nav slider после того как layout посчитан
-    requestAnimationFrame(() => updateCatNavSlider('бенто'));
+    requestAnimationFrame(() => {
+      updateCatNavSlider('бенто');
+      initSectionObserver();
+    });
 
   } catch(e) {
     container.innerHTML = `<div style="text-align:center;padding:60px;color:var(--text-light)">
