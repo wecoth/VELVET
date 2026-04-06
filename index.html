@@ -10,7 +10,6 @@
     const tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
-    if (tg.requestFullscreen) tg.requestFullscreen();
   }
 </script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,17 +36,11 @@
   --shadow-hover: 0 16px 60px rgba(62,26,12,0.15);
 }
  
-html { scroll-behavior: smooth; }
- 
 body {
   font-family: 'Nunito', sans-serif;
   background: var(--white);
   color: var(--text);
   overflow-x: hidden;
-  overscroll-behavior-y: none;
-}
-html {
-  overscroll-behavior-y: none;
 }
  
 /* ─── GRADIENT BG ─── */
@@ -958,11 +951,11 @@ footer {
 <nav id="main-nav">
   <a href="#" class="nav-logo">VELVET <span class="nav-logo-sub">АВТОРСКАЯ<br>КОНДИТЕРСКАЯ</span></a>
   <ul class="nav-links">
-    <li><a href="#catalog">Каталог</a></li>
-    <li><a href="#about">О нас</a></li>
-    <li><a href="#faq">FAQ</a></li>
-    <li><a href="#delivery">Доставка</a></li>
-    <li><a href="#contact">Контакты</a></li>
+    <li><a href="#catalog" onclick="event.preventDefault();scrollToSection('catalog')">Каталог</a></li>
+    <li><a href="#about" onclick="event.preventDefault();scrollToSection('about')">О нас</a></li>
+    <li><a href="#faq" onclick="event.preventDefault();scrollToSection('faq')">FAQ</a></li>
+    <li><a href="#delivery" onclick="event.preventDefault();scrollToSection('delivery')">Доставка</a></li>
+    <li><a href="#contact" onclick="event.preventDefault();scrollToSection('contact')">Контакты</a></li>
   </ul>
   <a href="https://t.me/DianaOmelyanenko" class="nav-btn" target="_blank">Заказать</a>
   <div class="burger" id="burger" onclick="openMenu()">
@@ -973,11 +966,11 @@ footer {
 <!-- MOBILE NAV -->
 <div class="mobile-nav" id="mobile-nav">
   <button class="mobile-close" onclick="closeMenu()">✕</button>
-  <a href="#catalog" onclick="closeMenu()">Каталог</a>
-  <a href="#about" onclick="closeMenu()">О нас</a>
-  <a href="#faq" onclick="closeMenu()">FAQ</a>
-  <a href="#delivery" onclick="closeMenu()">Доставка</a>
-  <a href="#contact" onclick="closeMenu()">Заказать</a>
+  <a href="#catalog" onclick="event.preventDefault();closeMenu();scrollToSection('catalog')">Каталог</a>
+  <a href="#about" onclick="event.preventDefault();closeMenu();scrollToSection('about')">О нас</a>
+  <a href="#faq" onclick="event.preventDefault();closeMenu();scrollToSection('faq')">FAQ</a>
+  <a href="#delivery" onclick="event.preventDefault();closeMenu();scrollToSection('delivery')">Доставка</a>
+  <a href="#contact" onclick="event.preventDefault();closeMenu();scrollToSection('contact')">Заказать</a>
 </div>
  
 <!-- HERO -->
@@ -997,7 +990,7 @@ footer {
       <a href="https://t.me/DianaOmelyanenko?text=Привет!%20Интересует%20заказ%20десерта%2C%20можете%20рассказать%20подробнее%3F" class="btn-primary" target="_blank">
         <span>Заказать</span> <span>→</span>
       </a>
-      <a href="#catalog" class="btn-outline" onclick="event.preventDefault();scrollToCatalogAndFilter('бенто')">Смотреть каталог</a>
+      <a href="#catalog" class="btn-outline" onclick="event.preventDefault();scrollToCatalogSection('бенто')">Смотреть каталог</a>
     </div>
     </div><!-- /hero-bottom -->
   </div>
@@ -1135,9 +1128,9 @@ footer {
   <a href="#" class="footer-logo">Velvet</a>
   <div class="footer-copy">© 2026 Velvet. Авторская кондитерская, Краснодар</div>
   <div class="footer-links">
-    <a href="#catalog">Каталог</a>
-    <a href="#about">О нас</a>
-    <a href="#contact">Контакты</a>
+    <a href="#catalog" onclick="event.preventDefault();scrollToSection('catalog')">Каталог</a>
+    <a href="#about" onclick="event.preventDefault();scrollToSection('about')">О нас</a>
+    <a href="#contact" onclick="event.preventDefault();scrollToSection('contact')">Контакты</a>
   </div>
 </footer>
 
@@ -1164,6 +1157,15 @@ function calcNavThreshold() {
 }
 window.addEventListener('load', calcNavThreshold);
 
+// ─── GENERAL SECTION SCROLL (для nav-ссылок) ───
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const navH = document.getElementById('main-nav').offsetHeight || 56;
+  const top = el.getBoundingClientRect().top + window.scrollY - navH - 8;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
 // ─── SCROLL OBSERVER для cat-nav ───
 const SECTIONS_ORDER = ['бенто','торты','трайфлы','капкейки'];
 let activeSectionSlug = 'бенто';
@@ -1186,8 +1188,12 @@ function updateCatNavSlider(slug) {
 function scrollToCatalogSection(slug) {
   const section = document.getElementById('cat-section-' + slug);
   if (!section) return;
-  const navHeight = 56 + 52;
-  const top = section.getBoundingClientRect().top + window.scrollY - navHeight - 8;
+  const mainNav = document.getElementById('main-nav');
+  const catNav = document.getElementById('cat-nav');
+  const mainNavH = (mainNav && mainNav.offsetHeight) || 56;
+  const catNavH = (catNav && catNav.classList.contains('visible')) ? (catNav.offsetHeight || 52) : 0;
+  const offset = mainNavH + catNavH + 8;
+  const top = section.getBoundingClientRect().top + window.scrollY - offset;
   window.scrollTo({ top, behavior: 'smooth' });
 }
 
@@ -1243,6 +1249,8 @@ function order(product) {
 }
 
 // ─── SWIPER (translateX, все listeners passive, вертикальный скролл свободен) ───
+const _swiperGoFns = []; // глобальный список goTo-функций для resize
+
 function initSwiper(sectionEl) {
   const track = sectionEl.querySelector('.swiper-track');
   const dots = sectionEl.querySelectorAll('.swiper-dot');
@@ -1267,6 +1275,9 @@ function initSwiper(sectionEl) {
     if (prevBtn) prevBtn.style.opacity = idx === 0 ? '0.3' : '1';
     if (nextBtn) nextBtn.style.opacity = idx === total - 1 ? '0.3' : '1';
   }
+
+  // регистрируем в глобальном списке
+  _swiperGoFns.push(() => goTo(current));
 
   // стрелки и dots
   if (prevBtn) prevBtn.addEventListener('click', () => goTo(current - 1));
@@ -1305,11 +1316,13 @@ function initSwiper(sectionEl) {
     axis = null;
   }, { passive: true });
 
-  // пересчёт при resize
-  window.addEventListener('resize', () => goTo(current), { passive: true });
-
   goTo(0);
 }
+
+// Один глобальный resize-листенер вместо N штук
+window.addEventListener('resize', () => {
+  _swiperGoFns.forEach(fn => fn());
+}, { passive: true });
 
 // ─── N8N MENU LOADER ───
 const N8N_URL = 'https://assistcloudai.xyz/webhook/velvet';
