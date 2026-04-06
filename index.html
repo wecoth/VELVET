@@ -1494,7 +1494,9 @@ function renderCard(т) {
   const emoji = EMOJI[т.id_категории] || '🍰';
   const bg = BG[т.id_категории] || BG['кат_002'];
   const fillingTags = (т.начинки || []).map(n => `<span class="filling-tag">${escapeHtml(n)}</span>`).join('');
-  const цена = т.цена ? `от ${escapeHtml(т.цена)} ₽` : 'Уточнить';
+  const FIXED_PRICE_CATS = ['кат_003', 'кат_006'];
+  const прайсПрефикс = FIXED_PRICE_CATS.includes(т.id_категории) ? '' : 'от ';
+  const цена = т.цена ? `${прайсПрефикс}${escapeHtml(т.цена)} ₽` : 'Уточнить';
   const названиеRaw = т.название || '';
   const названиеHtml = escapeHtml(названиеRaw);
   const варианты = (т.размеры || т.варианты || []).filter(в => в.вес && в.цена);
@@ -1506,7 +1508,7 @@ function renderCard(т) {
       <div class="card-front">
        <div class="card-img" style="background:${bg}">
  ${т.фото
-  ? `<img src="${escapeHtml(т.фото)}" alt="${названиеHtml}" class="card-photo" loading="lazy" decoding="async">`
+  ? `<img src="${escapeHtml(т.фото)}" alt="${названиеHtml}" class="card-photo" loading="eager" decoding="async">`
   : `<div class="card-emoji">${emoji}</div>`
 }
 </div>
@@ -1600,6 +1602,18 @@ async function loadMenu() {
 
     if (!html) throw new Error('No items');
     container.innerHTML = html;
+    container.style.opacity = '0';
+
+    // ждём загрузки всех фото перед показом
+    const imgs = Array.from(container.querySelectorAll('img.card-photo'));
+    if (imgs.length) {
+      await Promise.all(imgs.map(img =>
+        img.complete ? Promise.resolve() :
+        new Promise(res => { img.onload = res; img.onerror = res; })
+      ));
+    }
+    container.style.transition = 'opacity 0.4s ease';
+    container.style.opacity = '1';
 
     // делегирование кликов: flip и order
     container.addEventListener('click', e => {
@@ -1739,11 +1753,13 @@ observeReveal();
   const heroEl = document.querySelector('.hero');
   function startInterval() {
     if (intervalId) return;
+    // сразу создаём несколько чтобы экран не был пустым при возврате
+    createEmoji(); createEmoji();
     intervalId = setInterval(createEmoji, 5000);
   }
   function stopInterval() {
     if (intervalId) { clearInterval(intervalId); intervalId = null; }
-    while (container.firstChild) container.firstChild.remove();
+    // НЕ удаляем живые эмодзи — они сами упадут и исчезнут
   }
   if (heroEl && 'IntersectionObserver' in window) {
     const heroObs = new IntersectionObserver(entries => {
