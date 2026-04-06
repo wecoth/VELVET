@@ -927,7 +927,18 @@ footer {
 .footer-links a { font-size: .75rem; color: var(--text-light); text-decoration: none; transition: color .2s; }
 .footer-links a:hover { color: var(--choco); }
 
-/* ─── SCROLL REVEAL ─── */
+/* ─── SWIPE HINT ─── */
+@keyframes swipeHint {
+  0%   { transform: translateX(0); }
+  25%  { transform: translateX(-28px); }
+  55%  { transform: translateX(6px); }
+  75%  { transform: translateX(-10px); }
+  90%  { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+.swiper-track.hint {
+  animation: swipeHint 0.7s cubic-bezier(.4,0,.2,1) forwards;
+}
 .reveal {
   opacity: 0; transform: translateY(16px);
   transition: opacity .7s ease, transform .7s ease;
@@ -1651,6 +1662,7 @@ async function loadMenu() {
     requestAnimationFrame(() => {
       updateCatNavSlider('бенто');
       initSectionObserver();
+      initSwipeHints();
     });
 
   } catch(e) {
@@ -1669,6 +1681,30 @@ document.getElementById('cat-nav-inner').addEventListener('click', e => {
   if (!btn) return;
   scrollToCatalogSection(btn.dataset.section);
 });
+
+// ─── SWIPE HINT — запускается один раз при первом появлении секции ───
+function initSwipeHints() {
+  const hintObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const track = entry.target.querySelector('.swiper-track');
+      if (!track) return;
+      // только если карточек больше одной
+      const cards = track.querySelectorAll('.product-card');
+      if (cards.length < 2) return;
+      // задержка чтобы reveal-анимация секции успела отыграть
+      setTimeout(() => {
+        track.classList.remove('hint');
+        void track.offsetWidth; // reflow
+        track.classList.add('hint');
+        track.addEventListener('animationend', () => track.classList.remove('hint'), { once: true });
+      }, 400);
+      hintObs.unobserve(entry.target);
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.catalog-section').forEach(sec => hintObs.observe(sec));
+}
 
 // ─── SCROLL REVEAL ───
 const _revealObserver = new IntersectionObserver((entries) => {
