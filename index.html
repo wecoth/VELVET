@@ -1318,11 +1318,8 @@ function flipCard(btn) {
 
 // ─── ORDER ───
 function order(product) {
-  const text = 'Привет! Хочу заказать: ' + product;
-  // tg://resolve обрабатывается нативным клиентом Telegram и корректно декодирует кириллицу,
-  // в отличие от https://t.me/...?text=... который проходит через веб-редирект и ломает encoding
-  const url = 'tg://resolve?domain=DianaOmelyanenko&text=' + encodeURIComponent(text);
-  window.location.href = url;
+  // Просто открываем чат, без предзаполнения текста
+  window.open('https://t.me/DianaOmelyanenko', '_blank');
 }
 
 // ─── SWIPER (translateX, все listeners passive, вертикальный скролл свободен) ───
