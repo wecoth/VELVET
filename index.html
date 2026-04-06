@@ -897,6 +897,10 @@ footer {
 .footer-links a { font-size: .75rem; color: var(--text-light); text-decoration: none; transition: color .2s; }
 .footer-links a:hover { color: var(--choco); }
 
+@keyframes spinLoader {
+  to { transform: rotate(360deg); }
+}
+
 /* ─── SWIPE HINT ─── */
 @keyframes swipeHint {
   0%   { transform: translateX(0); }
@@ -978,8 +982,15 @@ footer {
 .float-emoji {
   position: absolute;
   user-select: none;
-  animation: fallDown linear infinite;
-  top: -60px;
+  top: -80px;
+  will-change: transform, opacity;
+}
+
+@keyframes floatDown {
+  0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translateY(118vh) translateX(var(--sway)) rotate(var(--rot)); opacity: 0; }
 }
 
 @keyframes fallDown {
@@ -1063,8 +1074,17 @@ footer {
     </div>
   </div>
   <div id="products-container">
-    <div id="catalog-loading" style="text-align:center;padding:80px 20px;color:var(--text-light);font-size:.95rem;">
-      Загружаем меню...
+    <div id="catalog-loading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;gap:20px;">
+      <div style="position:relative;width:52px;height:52px;">
+        <svg width="52" height="52" viewBox="0 0 52 52" style="animation:spinLoader 1.1s linear infinite;display:block;">
+          <circle cx="26" cy="26" r="22" fill="none" stroke="var(--beige-dark)" stroke-width="3"/>
+          <circle cx="26" cy="26" r="22" fill="none" stroke="var(--choco)" stroke-width="3"
+            stroke-dasharray="138" stroke-dashoffset="100"
+            stroke-linecap="round"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">🎂</div>
+      </div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--text-mid);letter-spacing:.5px;">Готовим меню…</div>
     </div>
   </div>
 </section>
@@ -1694,73 +1714,80 @@ function observeReveal() {
 observeReveal();
 
 // zoom отключён через viewport meta
-// ─── FALLING EMOJIS (лёгкая версия — без blur, макс 4 на экране) ───
+// ─── FALLING EMOJIS — эффектный дождь с глубиной и параллаксом ───
 (function() {
-  const emojis = ['🍰','🍓','🧁','🍒','✨','🌸','🍮','🎂','🫐','🍫','🍋','🍪'];
+  const emojis = ['🍰','🍓','🧁','🍒','✨','🌸','🍮','🎂','🫐','🍫','🍋','🍪','🫧','🌺','💫','🍬'];
   const container = document.getElementById('hero-floats');
   if (!container) return;
 
-  const MAX_ON_SCREEN = 4;
-  let lastLeft = -1;
-  let lastEmoji = '';
+  // Слои глубины: [размер, непрозрачность, скорость, блюр]
+  const LAYERS = [
+    { size: [1.8, 2.6], opacity: [0.8, 0.95], dur: [12, 16], blur: 0,   weight: 3 },
+    { size: [1.0, 1.5], opacity: [0.4, 0.6],  dur: [16, 22], blur: 1,   weight: 4 },
+    { size: [0.6, 0.9], opacity: [0.12, 0.22],dur: [20, 28], blur: 3.5, weight: 3 },
+  ];
+
+  const MAX_ON_SCREEN = 7;
   let intervalId = null;
+  let lastLeft = -1;
+
+  function pickLayer() {
+    const total = LAYERS.reduce((s, l) => s + l.weight, 0);
+    let r = Math.random() * total;
+    for (const l of LAYERS) { r -= l.weight; if (r <= 0) return l; }
+    return LAYERS[1];
+  }
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
 
   function createEmoji() {
-    // не создаём новые если уже много на экране
     if (container.children.length >= MAX_ON_SCREEN) return;
 
+    const layer = pickLayer();
     const el = document.createElement('span');
     el.className = 'float-emoji';
-    // выбираем эмодзи отличный от прошлого (с safety-limit)
-    let emoji = emojis[Math.floor(Math.random() * emojis.length)];
-    for (let tries = 0; tries < 5 && emoji === lastEmoji; tries++) {
-      emoji = emojis[Math.floor(Math.random() * emojis.length)];
-    }
-    lastEmoji = emoji;
+
+    const sharp = ['🍰','🧁','🎂','🍫','🍪','🍒','🫐','🍓'];
+    const pool = layer === LAYERS[0] ? sharp : emojis;
+    const emoji = pool[Math.floor(Math.random() * pool.length)];
     el.textContent = emoji;
 
-    // выбираем позицию отличную от прошлой (с safety-limit)
-    let left = 5 + Math.random() * 90;
-    for (let tries = 0; tries < 5 && Math.abs(left - lastLeft) < 15; tries++) {
-      left = 5 + Math.random() * 90;
-    }
+    let left = 4 + Math.random() * 92;
+    for (let t = 0; t < 8 && Math.abs(left - lastLeft) < 14; t++) left = 4 + Math.random() * 92;
     lastLeft = left;
 
-    const size = 1.2 + Math.random() * 0.8;
-    const duration = 12 + Math.random() * 6;
-    const isSharp = ['🍰','🧁','🎂','🍫','🍪'].includes(emoji);
-    const blur = isSharp ? 0 : (3 + Math.random() * 4);
-    const opacity = isSharp ? 0.8 : 0.25 + Math.random() * 0.2;
+    const size    = rand(...layer.size);
+    const opacity = rand(...layer.opacity);
+    const dur     = rand(...layer.dur);
+    const blur    = layer.blur;
+    const sway    = rand(10, 30) * (Math.random() > 0.5 ? 1 : -1);
+    const rot     = rand(-15, 15);
 
     el.style.cssText = `
       left: ${left}%;
-      top: -60px;
+      top: -80px;
       font-size: ${size}rem;
       filter: blur(${blur}px);
       opacity: ${opacity};
-      animation-duration: ${duration}s;
-      animation-delay: 0s;
+      animation: floatDown ${dur}s linear forwards;
+      --sway: ${sway}px;
+      --rot: ${rot}deg;
     `;
-    container.appendChild(el);
-    const t = setTimeout(() => {
-      el.remove();
-    }, duration * 1000 + 300);
 
-    // на случай если элемент уже удалён — clearTimeout не нужен, но el.remove() безопасен
+    container.appendChild(el);
+    setTimeout(() => el.remove(), dur * 1000 + 500);
   }
 
-  // останавливаем когда hero вне видимости (пользователь проскроллил вниз)
-  const heroEl = document.querySelector('.hero');
   function startInterval() {
     if (intervalId) return;
-    // сразу создаём несколько чтобы экран не был пустым при возврате
-    createEmoji(); createEmoji();
-    intervalId = setInterval(createEmoji, 5000);
+    for (let i = 0; i < 4; i++) setTimeout(createEmoji, i * 600);
+    intervalId = setInterval(createEmoji, 2200);
   }
   function stopInterval() {
     if (intervalId) { clearInterval(intervalId); intervalId = null; }
-    // НЕ удаляем живые эмодзи — они сами упадут и исчезнут
   }
+
+  const heroEl = document.querySelector('.hero');
   if (heroEl && 'IntersectionObserver' in window) {
     const heroObs = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) startInterval();
@@ -1770,9 +1797,6 @@ observeReveal();
   } else {
     startInterval();
   }
-
-  // первые 2 с задержкой (было 3 — уменьшили нагрузку)
-  for (let i = 0; i < 2; i++) setTimeout(createEmoji, i * 2000);
 })();
 </script>
 </body>
