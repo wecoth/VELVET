@@ -990,6 +990,16 @@ footer {
   .hero-btns { margin-top: 0; }
   nav { background: rgba(255,255,255,0.65); }
 }
+/* Мобильный браузер: жёстко фиксируем высоту nav в 56px */
+@media (max-width: 899px) {
+  body:not(.is-tg) nav {
+    height: 56px !important;
+    max-height: 56px !important;
+    overflow: hidden !important;
+    padding: 0 5% !important;
+    flex-direction: row !important;
+  }
+}
 /* ─── TG: hero-top чуть ниже под системными кнопками ─── */
 body.is-tg .hero-top { margin-top: 20px; }
 @media (max-width: 600px) {
