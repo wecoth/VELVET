@@ -439,9 +439,9 @@ section { padding: 50px 5%; }
 .swiper-arrow {
   display: flex;
   position: absolute;
-  /* центр картинки карточки: padding-top swiper-wrap (8px) + половина высоты картинки
+  /* нижний край картинки карточки: padding-top swiper-wrap (8px) + ~85% высоты картинки
      картинка = ширина карточки × 0.85; ширина карточки ≈ 90vw − 24px → высота ≈ 0.85×(90vw−24px) */
-  top: calc(8px + 0.425 * (90vw - 24px));
+  top: calc(8px + 0.78 * (90vw - 24px));
   transform: translateY(-50%);
   z-index: 10;
   width: 40px; height: 40px;
